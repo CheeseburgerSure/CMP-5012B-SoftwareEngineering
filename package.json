@@ -1,0 +1,19 @@
+{
+  "name": "cmp-5012b-softwareengineering",
+  "version": "1.0.0",
+  "description": "Software Engineering Group 113 Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CheeseburgerSure/CMP-5012B-SoftwareEngineering.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CheeseburgerSure/CMP-5012B-SoftwareEngineering/issues"
+  },
+  "homepage": "https://github.com/CheeseburgerSure/CMP-5012B-SoftwareEngineering#readme"
+}
