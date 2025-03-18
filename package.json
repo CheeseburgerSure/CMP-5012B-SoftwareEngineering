@@ -4,7 +4,8 @@
   "description": "Software Engineering Group 113 Project",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "nodemon ./webPages/index.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,13 @@
   "bugs": {
     "url": "https://github.com/CheeseburgerSure/CMP-5012B-SoftwareEngineering/issues"
   },
-  "homepage": "https://github.com/CheeseburgerSure/CMP-5012B-SoftwareEngineering#readme"
+  "homepage": "https://github.com/CheeseburgerSure/CMP-5012B-SoftwareEngineering#readme",
+  "keywords": [],
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
+  "type": "module"
 }
