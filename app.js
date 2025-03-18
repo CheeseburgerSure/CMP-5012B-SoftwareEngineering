@@ -15,5 +15,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`Running Software Engineering Project Group 113 on PORT ${port}`);
 });
