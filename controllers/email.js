@@ -1,18 +1,17 @@
-const nodemailer = require("nodemailer")
+import nodemailer from 'nodemailer';
 
 // Create a transporter object
-// We use GMAIL
 const transporter = nodemailer.createTransport({
-  service: 'Gmail', 
+  service: 'Gmail',
   auth: {
-    user: 'parkflow@gmail.com',
-    pass: '--- ' // enter the password
+    user: 'parkflow113@gmail.com',
+    pass: 'lsop thyf yfwk kkmr'
   }
 });
 
 async function sendEmail(to, subject, text) {
   const mailOptions = {
-    from: 'parkflow@gmail.com',
+    from: 'parkflow113@gmail.com',
     to: to,
     subject: subject,
     text: text
@@ -26,4 +25,5 @@ async function sendEmail(to, subject, text) {
   }
 }
 
-module.exports = { sendEmail };
+// Export the sendEmail function
+export { sendEmail };

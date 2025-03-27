@@ -1,0 +1,25 @@
+// views/verification.pug
+doctype html
+html
+  head
+    title Verification Page
+    link(rel="stylesheet", href="/css/main.css") 
+  body
+    header
+      nav
+        ul
+          li: a(href="/") Home
+          li: a(href="/createAccount") Create Account
+          li: a(href="/login") Login
+    main
+      section
+        h1 Verify Your Account
+        p Please enter the 6-digit verification code we sent to your email.
+        form(action="/verifyAccount" method="POST")
+          div
+            label(for="verificationCode") Verification Code:
+            input(type="text" id="verificationCode" name="verificationCode" required)
+          div
+            button(type="submit") Verify Account
+    footer
+      p &copy; 2025 Parkflow
