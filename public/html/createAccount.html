@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<head>
+    <title>Create a new account</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <a href="index.html"><li>Home</li></a>
+                <a href="adminLogin.html"><li>Admin Login</li></a>
+                <a href="adminPanel.html"><li>Admin Panel</li></a>
+                <a href="createAccount.html"><li>Create Account</li></a>
+                <a href="forgotPassword.html"><li>Forgot Password</li></a>
+                <a href="login.html"><li>Login</li></a>
+                <a href="payment.html"><li>Payment</li></a>
+                <a href="reserve.html"><li>Reserve</li></a>
+                <a href="resetPassword.html"><li>Reset Password</li></a>
+                <a href="messenger.html"><li>(Temp) Messenger</li></a>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h1>CREATE ACCOUNT</h1>
+            <form action="/createAccountForm" method="POST">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" value="example123@hotmail.com" required><br>
+
+                <label for="confirmEmail">Confirm Email Address</label>
+                <input type="email" id="confirmEmail" name="confirmEmail" value="example123@hotmail.com" required><br>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" value="Password" required><br>
+
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" value="Password" required><br>
+
+                <label for="tos">*I accept the terms and conditions</label>
+                <input type="checkbox" id="tos" name="tos" value="tos" required><br>
+
+                <input type="submit" value="CREATE ACCOUNT">
+                <p>A verification email will be sent to you.</p>
+            </form>
+        </section>
+    </main>
+    <footer>
+
+    </footer>
+</body>
