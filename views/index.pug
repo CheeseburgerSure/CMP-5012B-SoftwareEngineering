@@ -1,25 +1,28 @@
 doctype html
-html
+html(lang="en")
   head
-    title Login Page
-    link(rel="stylesheet", href="/css/main.css")
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title ParkFlow
+    link(rel="stylesheet" href="styles.css")
 
   body
-    header
-      nav
-        ul
-          li: a(href="/") Home
-          li: a(href="/adminLogin") Admin Login
-          li: a(href="/adminPanel") Admin Panel
-          li: a(href="/createAccount") Create Account
-          li: a(href="/forgotPassword") Forgot Password
-          li: a(href="/login") Login
-          li: a(href="/payment") Payment
-          li: a(href="/reserve") Reserve
-          li: a(href="/resetPassword") Reset Password
-          li: a(href="/messenger") (Temp) Messenger
-    main
-      section
-        h1 HOME PAGE
+    // Navigation
+    nav.navbar
+      .logo ParkFlow
+      .menu-icon(onclick="toggleMenu()") &#9776;
+      ul.nav-links
+        li: a(href="/index") Home
+        li: a(href="/login") Login
+        li: a(href="/create-account") Create Account
 
+    // Main Content
+    .content
+      h1 Welcome to ParkFlow
+      p Your smart car park solution.
+
+    // Footer
     footer
+      p &copy; 2025 ParkFlow. All Rights Reserved.
+
+    script(src="script.js")

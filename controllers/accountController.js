@@ -25,14 +25,14 @@ export async function createAccount(req, res) {
 
   // Generate a unique verification code
   verificationCode = Math.floor(100000 + Math.random() * 900000); // Generate a 6-digit number
-  const verificationLink = `http://localhost:3000/verification`;
+  const verificationLink = `http://localhost:3000/verify`;
 
   // Send verification email
   await sendEmail(email, 'Account Verification', `Your verification code is: ${verificationCode}. Visit this link to confirm: ${verificationLink}`);
 
   // Store user data temporarily (You should save it to a real database)
   users.push({ email, password, verified: false });
-  res.redirect('/verification');
+  res.redirect('/verify');
 }
 
 // Handle verification

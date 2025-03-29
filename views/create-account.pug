@@ -1,0 +1,85 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Create Account | ParkFlow
+    link(rel="stylesheet" href="styles.css")
+    // Optional: Link to a flag icon library
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/5.0.0/css/flag-icon.min.css")
+  body
+    // Navbar
+    nav.navbar
+      .logo ParkFlow
+      .menu-icon(onclick="toggleMenu()") &#9776;
+      ul.nav-links
+        li: a(href="/") Home
+        li: a(href="/login") Login
+        li: a(href="/create-account") Create Account
+    
+    // Create Account Content
+    .content
+      .form-container
+        h1 Create Account
+        form(action ="/createAccountForm", method="POST")
+          // First and Last Name Fields
+          label(for="first-name") First Name
+          input(type="text" id="first-name" name="first-name" required)
+          
+          label(for="last-name") Last Name
+          input(type="text" id="last-name" name="last-name" required)
+          
+          // Phone Number Field with Country Code Dropdown
+          label(for="phone-number") Phone Number
+          .phone-input-container
+            select(id="country-code" name="country-code" required)
+              option(value="+44" data-flag="gb" selected) +44 (UK)
+              option(value="+1" data-flag="us") +1 (USA)
+              option(value="+61" data-flag="au") +61 (Australia)
+            input(type="tel" id="phone-number" name="phone-number" required placeholder="e.g., 123-456-7890")
+          
+          // Email Fields
+          label(for="email") Email
+          input(type="email" id="email" name="email" required)
+          
+          label(for="confirmEmail") Confirm Email
+          input(type="email" id="confirmEmail" name="confirmEmail" required)
+          
+          // Password Fields
+          label(for="password") Password
+          input(type="password" id="password" name="password" required)
+          
+          label(for="confirmPassword") Verify Password
+          input(type="password" id="confirmPassword" name="confirmPassword" required)
+          
+          // Terms and Conditions
+          .checkbox-container
+            input(type="checkbox" id="tos" name="tos" required)
+            label(for="tos") I accept the Terms and Conditions
+          
+          input(type="submit", value="CREATE ACCOUNT")
+        
+        p.signup-link Already have an account? 
+          a(href="signin.html") Sign in now!
+    
+    // Footer
+    footer
+      p &copy; 2025 ParkFlow. All Rights Reserved.
+    
+    script(src="script.js")
+    script.
+      function validatePassword() {
+        var password = document.getElementById("password").value;
+        var passwordVerify = document.getElementById("verify-password").value;
+        var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        
+        if (!passwordRegex.test(password)) {
+          alert("Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.");
+          return false;
+        }
+        if (password !== passwordVerify) {
+          alert("Passwords do not match.");
+          return false;
+        }
+        return true;
+      }

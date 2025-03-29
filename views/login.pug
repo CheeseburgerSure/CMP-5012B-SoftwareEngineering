@@ -1,33 +1,44 @@
 doctype html
-html
+html(lang="en")
   head
-    title Login Page
-    link(rel="stylesheet" href="css/main.css")
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Login | ParkFlow
+    link(rel="stylesheet" href="styles.css")
+
   body
-    header
-      nav
-        ul
-            li: a(href="/") Home
-            li: a(href="/adminLogin") Admin Login
-            li: a(href="/adminPanel") Admin Panel
-            li: a(href="/createAccount") Create Account
-            li: a(href="/forgotPassword") Forgot Password
-            li: a(href="/login") Login
-            li: a(href="/payment") Payment
-            li: a(href="/reserve") Reserve
-            li: a(href="/resetPassword") Reset Password
-            li: a(href="/messenger") (Temp) Messenger
-    main
-      section
-        h1 LOGIN
-        form#loginForm
-          label(for="email") Email Address
-          input(type="text" id="email" name="email" value="example123@hotmail.com")
-          br
+    // Navbar
+    nav.navbar
+      .logo ParkFlow
+      ul.nav-links
+        li: a(href="/") Home
+        li: a(href="/login") Login
+        li: a(href="/create-account") Create Account
+
+    // Login Form
+    .content
+      .form-container
+        h1 Login
+        form(action="user-access.pug" method="post")
+          label(for="username") Username
+          input(type="text" id="username" name="username" placeholder="Enter your username" required)
+
           label(for="password") Password
-          input(type="text" id="password" name="password" value="Password")
-          br
-          input(type="submit" value="LOGIN")
-        button Forgot Password?
-        button Create Account
+          input(type="password" id="password" name="password" placeholder="Enter your password" required)
+
+          button(type="submit") Login
+
+        // Forgot Password link
+        .forgot-password
+          a(href="forgot-password.pug") Forgot Password?
+
+        // Don't have an account? Create one now!
+        .signup-link
+          p Don't have an account? 
+            a(href="signup.pug") Create one now!
+
+    // Footer
     footer
+      p &copy; 2025 ParkFlow. All Rights Reserved.
+
+    script(src="script.js")
