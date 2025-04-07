@@ -1,48 +1,57 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reserve a parking space</title>
     <link rel="stylesheet" href="css/main.css">
-
 </head>
 <body>
-    <h1> PMS </h1>
-    <h1> PMS </h1>
-    <header>
-        <nav class="navbar">
-            <ul>
-                <li><a href="adminLogin.html">Admin Login</li></a>
-                <li><a href="adminPanel.html">Admin Panel</li></a>
-                <li><a href="createAccount.html">Create Account</li></a>
-                <li><a href="forgotPassword.html">Forgot Password</li></a>
-                <li><a href="login.html">Login</li></a>
-                <li><a href="payment.html">Payment</li></a>
-                <li><a href="reserve.html">Reserve</li></a>
-                <li><a href="resetPassword.html">Reset Password</li></a>
-            </ul>
-        </nav>
-    </header>
-    <div class="reserve-container">
-        <div class="reserve-header">RESERVE</div>
-        <input type="text" class="search-input" placeholder="Enter destination...">
-        <div class="search-options">
-            <div class="search-radius">
-                Search Radius:
-                <select>
-                    <option>?</option>
-                    <option>??</option>
-                    <option>???</option>
+    <div class="header">
+        <h1>PMS</h1>
+    </div>
+    
+    <nav class="nav">
+        <ul>
+            <li><a href="adminLogin.html">Admin Login</a></li>
+            <li><a href="adminPanel.html">Admin Panel</a></li>
+            <li><a href="createAccount.html">Create Account</a></li>
+            <li><a href="forgotPassword.html">Forgot Password</a></li>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="payment.html">Payment</a></li>
+            <li><a href="reserve.html">Reserve</a></li>
+            <li><a href="resetPassword.html">Reset Password</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <div class="reserve-container">
+            <h1 class="reserve-header">RESERVE</h1>
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Enter postcode" id="destinationInput">
+                <button class="search-button" id="searchButton">Search</button>
+            </div>
+        <div class="error-message" id="errorMessage"></div>
+        
+        <div class="filter-options" id="filterOptions" style="display: none;">
+            <div class="option-group">
+                <span class="option-label">Search Radius:</span>
+                <select id="radiusSelect">
+                    <option value="1">?</option>
+                    <option value="2">??</option>
+                    <option value="5">???</option>
                 </select>
             </div>
-            <div class="sort-by">
-                Sort by:
-                <select>
-                    <option>Distance</option>
-                    <option>Rating</option>
+            <div class="option-group">
+                <span class="option-label">Sort by:</span>
+                <select id="sortSelect">
+                    <option value="distance">Distance</option>
                 </select>
             </div>
         </div>
+        
+        <div class="results-container" id="resultsContainer"></div>
     </div>
-    <footer>
-
-    </footer>
+    <script src="js/reserve.js"></script>
+    </main>
 </body>
