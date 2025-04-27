@@ -12,12 +12,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     
     const sampleLocations = [
-        { name: "City Centre Car Park", freeBays: 12, distance: 0.5 },
-        { name: "Riverfront Parking", freeBays: 5, distance: 0.8 },
-        { name: "Station Road Garage", freeBays: 3, distance: 1.2 },
-        { name: "Shopping Mall Parking", freeBays: 8, distance: 1.5 },
-        { name: "Green Park Spaces", freeBays: 15, distance: 1.8 },
-        { name: "Outskirts Parking", freeBays: 20, distance: 2.5 }
+        { name: "Grays Park", freeBays: 12, distance: 0.5 },
+        { name: "Grays Town Center", freeBays: 5, distance: 0.8 },
+        { name: "Norwich", freeBays: 3, distance: 1.2 },
+        { name: "Somewhere", freeBays: 8, distance: 1.5 },
+        { name: "????", freeBays: 15, distance: 1.8 },
+        { name: "????", freeBays: 20, distance: 2.5 }
     ];
 
     searchButton.addEventListener('click', function() {
