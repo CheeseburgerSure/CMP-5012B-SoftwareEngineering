@@ -1,34 +1,40 @@
+// Your imports
 import express from "express";
 import path from "path";
 import bodyParser from "body-parser";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-import session from "express-session"; // For session management
-import favicon from "serve-favicon"; // NEW: Import serve-favicon
-import { createAccount, verifyAccount } from './controllers/accountController.js'; // Import your account controller
-import fs from 'fs'; // Add this to check for file existence
+import session from "express-session";
+import favicon from "serve-favicon";
+import { createAccount, verifyAccount } from './controllers/accountController.js';
+import fs from 'fs';
+import { execSync } from 'child_process'; // <-- ADD THIS
 
 const app = express();
 const port = 3000;
+
+// Get the current Git branch name
+let branchName = 'unknown';
+try {
+  branchName = execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
+} catch (error) {
+  console.error('Could not get branch name:', error.message);
+}
 
 // Find file path
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Middleware for parsing incoming form data
+// Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
-
-// Serve static files (CSS, JS, images)
 app.use(express.static(path.join(__dirname, "public")));
-
-// Serve favicon
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
-// Set up the view engine (using Pug)
+// View engine
 app.set('view engine', 'pug');
 app.set('views', './views');
 
-// Setup session
+// Session
 app.use(session({
   secret: 'your-session-secret',
   resave: false,
@@ -40,32 +46,27 @@ app.get("/", (req, res) => {
   res.render('index');
 });
 
-// Route to handle dynamic page requests
 app.get('/:page', (req, res, next) => {
   const page = req.params.page;
   const filePath = path.join(__dirname, 'views', `${page}.pug`);
-
-  // Check if the requested .pug file exists
   fs.access(filePath, fs.constants.F_OK, (err) => {
     if (err) {
-      return next(); // Pass to 404 handler if file doesn't exist
+      return next();
     }
-    res.render(page); // Render the requested page if it exists
+    res.render(page);
   });
 });
 
-// Route to handle Create Account form
 app.post('/createAccountForm', createAccount);
-
-// Route to handle Account verification
 app.post('/verifyAccount', verifyAccount);
 
-// 404 Handler (MAKE SURE THIS IS AT THE END)
+// 404
 app.use((req, res) => {
-  res.status(404).render('404'); // Render the 404.pug page
+  res.status(404).render('404');
 });
 
 // Start the server
 app.listen(port, () => {
   console.log(`Running Software Engineering Project Group 113 on PORT ${port}`);
+  console.log(`This is Branch ${branchName}`);
 });
