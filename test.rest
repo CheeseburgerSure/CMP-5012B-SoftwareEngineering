@@ -8,5 +8,5 @@ POST http://localhost:13000/
 Content-Type: application/json
 
 {
-  "name": "test"
+  "name1": "test"
 }

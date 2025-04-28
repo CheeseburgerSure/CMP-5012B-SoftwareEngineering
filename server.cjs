@@ -1,6 +1,6 @@
 const express = require('express');
 const pool = require('./db.js');
-const port = 3001;
+const port = 3000;
 
 const app = express();
 
@@ -19,10 +19,9 @@ app.get('/', async (req, res) => {
 });
 
 app.post('/', async (req, res) => {
+    const { name1 } = req.body;
     try {
-        await pool.query(
-            'INSERT INTO tests (name) VALUES ($1)',
-            [name]);
+        await pool.query('INSERT INTO tests (name) VALUES ($1)', [name1]);
 
         res.status(200).send('inserted');
     } catch (error) {
