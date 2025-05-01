@@ -304,6 +304,12 @@
     padding: 10px;
     color: white;
   }
+
+  /* Index Page */
+
+  .headShot{
+    height: 50px;
+  }
   
   /* Media Queries for Mobile */
   @media (max-width: 768px) {
