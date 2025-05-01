@@ -37,6 +37,7 @@ app.get('/setup', async (req, res) => {
     try {
         await pool.query(
             'CREATE TABLE IF NOT EXISTS Users (UserID SERIAL PRIMARY KEY,Username VARCHAR(50) NOT NULL,Email VARCHAR(100) NOT NULL,Password VARCHAR(255) NOT NULL,PhoneNumber VARCHAR(20),IsAdmin BOOLEAN NOT NULL DEFAULT FALSE,IsBanned BOOLEAN NOT NULL DEFAULT FALSE,LicenseNumber VARCHAR(30),Balance DECIMAL(10, 2) DEFAULT 0.00)'
+
         )
         res.status(200).send('created');
     } catch (error) {
@@ -44,7 +45,18 @@ app.get('/setup', async (req, res) => {
         res.status(500)
     }
     });
-
+app.post('/clear', async (req, res) => {
+    try {
+        await pool.query(
+            'DELETE FROM Users *'
+        )
+        res.status(200).send('cleared');
+    } catch (error) {
+        console.log(error);
+        res.status(500)
+    }
+}
+);
 
 app.listen(port, () => {
     console.log(`Running on PORT ${port}`);
