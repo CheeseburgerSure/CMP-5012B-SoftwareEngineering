@@ -11,9 +11,9 @@ Content-Type: application/json
   "username": "john_doe",
   "email": "john.doe@example.com",
   "password": "$2a$10$xJwLH5XZ1z3QbB7p6YvT.eq1RZKU9dL4VcBgdWZ2MsDhRJ5JQzF6O",
-  "phoneNumber": "+1234567890",
-  "isAdmin": false,
-  "isBanned": false,
-  "licenseNumber": "DL12345678",
+  "phonenumber": "+1234567890",
+  "isadmin": false,
+  "isbanned": false,
+  "licensenumber": "DL12345678",
   "balance": 1500.75
 }
