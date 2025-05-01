@@ -7,28 +7,28 @@ exports.createAccount = async function (req, res) {
 
   // Validation
   if (email !== confirmEmail) {
-    return res.send('Emails do not match!');
+    return res.status(400).send('Emails do not match!');
   }
 
   if (password !== confirmPassword) {
-    return res.send('Passwords do not match!');
+    return res.status(400).send('Passwords do not match!');
   }
 
   if (!tos) {
-    return res.send('You must accept the terms and conditions!');
+    return res.status(400).send('You must accept the terms and conditions!');
   }
 
   try {
     // Generate a unique verification code
     const verificationCode = Math.floor(100000 + Math.random() * 900000);
-    const verificationLink = `http://localhost:3000/verify`;
+    const verificationLink = `http://localhost:3000/verify?email=${email}&code=${verificationCode}`;
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Insert the user into the database
     const query = `
-      INSERT INTO users (email, password, verified, verification_code)
+      INSERT INTO Users (email, password, verified, verification_code)
       VALUES ($1, $2, $3, $4)
       RETURNING *;
     `;
@@ -45,7 +45,7 @@ exports.createAccount = async function (req, res) {
 
     res.redirect('/verify');
   } catch (error) {
-    console.error(error);
+    console.error('Error creating account:', error);
     res.status(500).send('Error creating account.');
   }
 };
@@ -59,7 +59,7 @@ exports.verifyAccount = async function (req, res) {
     const { rows } = await pool.query(query, [email]);
 
     if (rows.length === 0) {
-      return res.send('Account not found!');
+      return res.status(404).send('Account not found!');
     }
 
     const user = rows[0];
@@ -72,10 +72,10 @@ exports.verifyAccount = async function (req, res) {
       );
       return res.send('Account verified successfully!');
     } else {
-      return res.send('Invalid verification code!');
+      return res.status(400).send('Invalid verification code!');
     }
   } catch (error) {
-    console.error(error);
+    console.error('Error verifying account:', error);
     res.status(500).send('Error verifying account.');
   }
 };
