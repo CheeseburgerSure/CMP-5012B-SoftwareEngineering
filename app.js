@@ -1,17 +1,11 @@
-import express from "express";
-import path from "path";
-import bodyParser from "body-parser";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-import session from "express-session"; // For session management
-import { createAccount, verifyAccount } from './controllers/accountController.js'; // Import your account controller
+const express = require("express");
+const path = require("path");
+const bodyParser = require("body-parser");
+const session = require("express-session"); // For session management
+const { createAccount, verifyAccount } = require('./controllers/accountController.js'); // Import your account controller
 
 const app = express();
 const port = 3000;
-
-// Find file path
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 // Middleware for parsing incoming form data
 app.use(bodyParser.urlencoded({ extended: true }));

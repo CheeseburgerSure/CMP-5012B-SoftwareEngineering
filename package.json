@@ -21,6 +21,7 @@
   "homepage": "https://github.com/CheeseburgerSure/CMP-5012B-SoftwareEngineering#readme",
   "keywords": [],
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
