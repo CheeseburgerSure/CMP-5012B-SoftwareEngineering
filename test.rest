@@ -7,16 +7,29 @@ GET http://localhost:13000/setup
 POST http://localhost:13000/clear
 
 ###
-POST http://localhost:13000/
+POST http://localhost:13000/insert
 Content-Type: application/json
 
 {
-  "username": "john_doe",
-  "email": "john.doe@example.com",
-  "password": "$2a$10$xJwLH5XZ1z3QbB7p6YvT.eq1RZKU9dL4VcBgdWZ2MsDhRJ5JQzF6O",
-  "phonenumber": "+1234567890",
-  "isadmin": false,
-  "isbanned": false,
-  "licensenumber": "DL12345678",
-  "balance": 1500.75
+  "user": {
+    "username": "john_doe",
+    "email": "john.doe@example.com",
+    "password": "$2a$10$xJwLH5XZ1z3QbB7p6YvT.eq1RZKU9dL4VcBgdWZ2MsDhRJ5JQzF6O",
+    "phonenumber": "+1234567890",
+    "isadmin": false,
+    "isbanned": false,
+    "licensenumber": "DL12345678",
+    "balance": 1500.75
+  },
+  "booking": {
+    "location": "Downtown Parking",
+    "spacenumber": 42,
+    "isblocked": false,
+    "date": "2025-05-15",
+    "time": "14:30:00",
+    "isverified": true
+  },
+  "parkingLot": {
+    "capacity": 200
+  }
 }
