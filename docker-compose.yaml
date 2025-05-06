@@ -21,3 +21,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    command: ["./wait-for-it.sh", "db:5432", "--", "npm", "run", "dbdev"]
+    volumes:
+      - .:/usr/src/app
+    networks:
+      - default

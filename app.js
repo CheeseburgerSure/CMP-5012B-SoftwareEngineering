@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
 const session = require("express-session"); // For session management
-const { createAccount, verifyAccount } = require('./controllers/accountController.js'); // Import your account controller
+const { postRegister, verifyAccount } = require('./controllers/accountController.js'); // Import your account controller
 
 const app = express();
 const port = 3000;
@@ -51,8 +51,9 @@ app.get('/:page', (req, res, next) => {
   });
 });
 
-app.post('/createAccountForm', createAccount);
-app.post('/verifyAccount', verifyAccount);
+// Route to handle Create Account form
+app.post('/createAccountForm', postRegister);  // Use the controller method here
+
 
 // 404
 app.use((req, res) => {
