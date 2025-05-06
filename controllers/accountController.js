@@ -1,81 +1,150 @@
-const { sendEmail } = require('./email.js');
-const pool = require('../db.js');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
+const pool = require('../db');  // db.js
+const { sendVerificationEmail } = require('./email.js');  // email.js
 
-exports.createAccount = async function (req, res) {
-  const { email, confirmEmail, password, confirmPassword, tos } = req.body;
+// Generate 6-digit code
+function generateVerificationCode() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
 
-  // Validation
+// GET /register
+exports.getRegister = (req, res) => {
+  res.render('create-account');  // matches your Pug filename!
+};
+
+// POST /register
+exports.postRegister = async (req, res) => {
+
+  // DEBUG
+  console.log('➡️ POST /createAccountForm triggered');
+  console.log('Request body:', req.body);
+
+  const {
+    firstName,
+    lastName,
+    countryCode,
+    phoneNumber,
+    email,
+    confirmEmail,
+    password,
+    confirmPassword,
+    tos
+  } = req.body;
+
+  // Server-side validation
+  // if (!firstName || !lastName || !countryCode || !phoneNumber || !email || !confirmEmail || !password || !confirmPassword || !tos) {
+  //   // res.render('create-account', { error: 'All fields are required.' });
+  //   console.log("Fields");
+  // }
+
+  if (!firstName) {
+    console.log("First name is required.");
+  }
+  
+  if (!lastName) {
+    console.log("Last name is required.");
+  }
+  
+  if (!countryCode) {
+    console.log("Country code is required.");
+  }
+  
+  if (!phoneNumber) {
+    console.log("Phone number is required.");
+  }
+  
+  if (!email) {
+    console.log("Email is required.");
+  }
+  
+  if (!confirmEmail) {
+    console.log("Confirm email is required.");
+  }
+  
+  if (!password) {
+    console.log("Password is required.");
+  }
+  
+  if (!confirmPassword) {
+    console.log("Confirm password is required.");
+  }
+  
+  if (!tos) {
+    console.log("Terms of service must be accepted.");
+  }
+  
   if (email !== confirmEmail) {
-    return res.status(400).send('Emails do not match!');
+    // res.render('create-account', { error: 'Emails do not match.' });
+    console.log("emails");
   }
 
   if (password !== confirmPassword) {
-    return res.status(400).send('Passwords do not match!');
+    // res.render('create-account', { error: 'Passwords do not match.' });
+    console.log("Passwords");
   }
 
-  if (!tos) {
-    return res.status(400).send('You must accept the terms and conditions!');
-  }
+  // Optional: Validate phone number format
+  const fullPhoneNumber = `${countryCode}${phoneNumber}`;
 
+
+  // ANTI SQL INJECTION VALIDATION
+  
   try {
-    // Generate a unique verification code
-    const verificationCode = Math.floor(100000 + Math.random() * 900000);
-    const verificationLink = `http://localhost:3000/verify?email=${email}&code=${verificationCode}`;
+    // Check if email is already in use
+    const existingUser = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    if (existingUser.rows.length > 0) {
+      return res.render('create-account', { error: 'An account with this email already exists.' });
+    }
+    console.log('New email account being used to create account')
 
-    // Hash the password
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Insert the user into the database
-    const query = `
-      INSERT INTO Users (email, password, verified, verification_code)
-      VALUES ($1, $2, $3, $4)
-      RETURNING *;
-    `;
-    const values = [email, hashedPassword, false, verificationCode];
-
-    await pool.query(query, values);
-
-    // Send verification email
-    await sendEmail(
-      email,
-      'Account Verification',
-      `Your verification code is: ${verificationCode}. Visit this link to confirm: ${verificationLink}`
+    const verificationCode = generateVerificationCode();
+``
+    // Insert new user
+    await pool.query(
+      'INSERT INTO users (first_name, last_name, country_code, phone_number, email, password_hash, verification_code) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+      [firstName, lastName, countryCode, fullPhoneNumber, email, hashedPassword, verificationCode]
     );
 
-    res.redirect('/verify');
-  } catch (error) {
-    console.error('Error creating account:', error);
-    res.status(500).send('Error creating account.');
+    // Send verification email
+    await sendVerificationEmail(email, verificationCode);
+
+    res.render('create-account', { success: 'Account created successfully! Check your email for the verification code.' });
+  } catch (err) {
+    console.error(err);
+    res.render('create-account', { error: 'Something went wrong. Please try again.' });
   }
 };
 
-exports.verifyAccount = async function (req, res) {
-  const { email, verificationCode: enteredCode } = req.body;
+// POST /verify
+exports.verifyAccount = async (req, res) => {
+  const { email, verificationCode } = req.body;
+
+  if (!email || !verificationCode) {
+    return res.render('verify', { error: 'Please provide both email and verification code.' });
+  }
 
   try {
-    // Find the user by email and check verification code
-    const query = `SELECT * FROM users WHERE email = $1;`;
-    const { rows } = await pool.query(query, [email]);
+    // Check if user exists with matching verification code
+    const userResult = await pool.query(
+      'SELECT * FROM users WHERE email = $1 AND verification_code = $2',
+      [email, verificationCode]
+    );
 
-    if (rows.length === 0) {
-      return res.status(404).send('Account not found!');
+    if (userResult.rows.length === 0) {
+      return res.render('verify', { error: 'Invalid email or verification code.' });
     }
 
-    const user = rows[0];
+    // Mark the user as verified
+    await pool.query(
+      'UPDATE users SET verified = TRUE, verification_code = NULL WHERE email = $1',
+      [email]
+    );
 
-    if (parseInt(enteredCode) === user.verification_code) {
-      // Update the user to mark as verified
-      await pool.query(
-        `UPDATE users SET verified = true WHERE email = $1;`,
-        [email]
-      );
-      return res.send('Account verified successfully!');
-    } else {
-      return res.status(400).send('Invalid verification code!');
-    }
-  } catch (error) {
-    console.error('Error verifying account:', error);
-    res.status(500).send('Error verifying account.');
+    res.render('verify', { success: '✅ Your account has been verified successfully!' });
+  } catch (err) {
+    console.error(err);
+    res.render('verify', { error: 'Something went wrong. Please try again.' });
   }
 };

@@ -11,28 +11,6 @@ POST http://localhost:13000/insert
 Content-Type: application/json
 
 {
-<<<<<<< HEAD
-  "username": "john_doe",
-  "email": "john.doe@example.com",
-  "password": "$2a$10$xJwLH5XZ1z3QbB7p6YvT.eq1RZKU9dL4VcBgdWZ2MsDhRJ5JQzF6O",
-  "phonenumber": "+1234567890",
-  "isadmin": false,
-  "isbanned": false,
-  "licensenumber": "DL12345678",
-  "balance": 1500.75
-}
-
-{
-  "username": "admin_113",
-  "email": "parkflow_group113@example.com",
-  "password": "$2a$10$xJwLH5XZ1z3QbB7p6YvT.eq1RZKU9dL4VcBgdWZ2MsDhRJ5JQzF6O",
-  "phonenumber": "+1234567890",
-  "isadmin": false,
-  "isbanned": false,
-  "licensenumber": "DL12345678",
-  "balance": 1500.75
-}
-=======
   "user": {
     "username": "john_doe",
     "email": "john.doe@example.com",
@@ -55,4 +33,3 @@ Content-Type: application/json
     "capacity": 200
   }
 }
->>>>>>> d83fd0c93b32e6443e62b9d426af945a4abb584c

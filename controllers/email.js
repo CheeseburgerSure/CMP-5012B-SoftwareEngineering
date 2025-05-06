@@ -9,6 +9,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+// General email sending function
 async function sendEmail(to, subject, text) {
   const mailOptions = {
     from: 'parkflow113@gmail.com',
@@ -19,11 +20,19 @@ async function sendEmail(to, subject, text) {
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log('Email sent successfully');
+    console.log(`Email sent successfully to ${to}`);
   } catch (error) {
     console.error('Error sending email:', error);
+    throw error;
   }
 }
 
-// Export the sendEmail function
-module.exports = { sendEmail };
+// Verification email helper
+async function sendVerificationEmail(to, code) {
+  const subject = 'Verify your account';
+  const text = `Your verification code is: ${code}`;
+  await sendEmail(to, subject, text);
+}
+
+// Export the functions
+module.exports = { sendEmail, sendVerificationEmail };
