@@ -5,24 +5,130 @@ html(lang="en")
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
     title ParkFlow
     link(rel="stylesheet" href="styles.css")
+    link(rel="stylesheet" href="bootstrap.css")
 
   body
     // Navigation
-    nav.navbar
-      .logo ParkFlow
-      .menu-icon(onclick="toggleMenu()") &#9776;
-      ul.nav-links
-        li: a(href="/index") Home
-        li: a(href="/login") Login
-        li: a(href="/create-account") Create Account
+    nav.navbar.navbar-expand-lg.navbar-dark.bg-nav 
+      .container.px-5 
+        img.img-thumbnail.m-sm-3.w-5(src="logo.png" alt="Park Flow Logo")
+        a.navbar-brand(href="/index") Parkflow
+        button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation")
+          span.navbar-toggler-icon
+        .collapse.navbar-collapse#navbarResponsive 
+          ul.navbar-nav.ms-auto.mb-2.mb-lg-0 
+            li.nav-item: a.nav-link.active(aria-current="page" href="/index") Home
+            li.nav-item: a.nav-link(href="/login") Login
+            li.nav-item: a.nav-link(href="/create-account") Create Account
+  
 
-    // Main Content
-    .content
-      h1 Welcome to ParkFlow
-      p Your smart car park solution.
+    // Header Content
+  
+    header.bg-nav.py-5 
+      .container.px-5 
+        .row.gx-5.justify-content-center 
+          .col-lg-6 
+            .text-center.my-5 
+              h1.display-5.fw-bolder.text-white.mb-2 Welcome to Parkflow 
+              p.lead.text-white-50.mb-4 Your smart car park solution 
+              .d-grid.gap-3.d-sm-flex.justify-content-sm-center 
+                a.btn.btn-primary.btn-lg.px-4.me-sm-3(href="#features") Get Started
+                a.btn.btn-outline-light.btn-lg.px-4(href="#!") Learn More
+
+    // Slogan
+
+    .py-5.bg-light 
+      .container.px-5.my-5 
+        .row.gx-5.justify-content-center
+          .col-lg-10.col-xl-7
+            .text-center 
+              .fs-4.mb-4.fst-italic "Park like a flow, with ParkFlow"
+              .d-flex.align-items-center.justify-content-center 
+                .fw-bold Our Company Slogan
+
+    
+
+    // Features
+
+    section.py-5 
+      .container.px-5.my-5 
+        .row.gx-5
+          .col-lg-4.mb-5.mb-lg-0
+            h2.fw-bolder.mb-0 A text comment about our features.
+          .col-lg-8
+            .row.gx-5.row-cols-1.row-cols-md-2
+              .col.mb-5.h-100
+                .feature.bg-primary.bg-gradient.text-white.rounded-3.mb-3 
+                  //Image here
+                h2.h5 Feature Title 1
+                p.mb-0 Paragraph explaining feature 1 and how it is useful to us!
+              .col.mb-5.h-100
+                .feature.bg-primary.bg-gradient.text-white.rounded-3.mb-3 
+                  //Image here
+                h2.h5 Feature Title 2
+                p.mb-0 Paragraph explaining feature 2 and how it is useful to us!
+              .col.mb-5.h-100
+                .feature.bg-primary.bg-gradient.text-white.rounded-3.mb-3 
+                  //Image here
+                h2.h5 Feature Title 3
+                p.mb-0 Paragraph explaining feature 3 and how it is useful to us!
+              .col.mb-5.h-100
+                .feature.bg-primary.bg-gradient.text-white.rounded-3.mb-3 
+                  //Image here
+                h2.h5 Feature Title 4
+                p.mb-0 Paragraph explaining feature 4 and how it is useful to us!
+
+    //UEA reference
+
+    header.bg-nav.py-5
+      .container.px-5
+        .row.gx-5.align-items-center.justify-content-center
+          .col-lg-8.col-xl-7.col-xxl-6 
+            .my-5.text-center.text-xl-start 
+              h1.display-5.fw-bolder.text-white.mb-2 Something about UEA 
+              p.lead.fw-normal.text-white-50.mb-4 Put an image of UEA on the right, and describe why we use it.
+              .d-grid.gap-3.d-sm-flex.justify-content-sm-center.justify-content-xl.start
+                a.btn.btn-primary.btn-lg.px-4.me-sm-3(href="#UeaWebsite") UEA Website
+          .col-xl-5.col-xxl-6.d-none.d-xl-block.text-center 
+            img.img-fluid.rounded-3.my-5(src="#ImageSrc" alt="altText")
+
+    // About Us
+    section.py-5.border-bottom
+      .text-center.mb-5 
+        h2.fw-bolder About our team
+      .container.px-5.my-5
+        .row.gx-5   
+          .col-lg-13.mb-5.mb-lg-0
+            .feature.bg-primary.bg-gradient.text-white.rounded-3.mb-3
+              img.headShot.rounded-3(src="headshotPlaceholder.png")
+            h2.h4.fw-bolder Harrison Mills
+            p Team Leader, Allfather of Voidborn Legacy.
+          .col-lg-13.mb-5.mb-lg-0
+            .feature.bg-primary.bg-gradient.text-white.rounded-3.mb-3
+              img.headShot.rounded-3(src="headshotPlaceholder.png")
+            h2.h4.fw-bolder Kshitij Rai
+            p From Hong Kong not Nepal. DEI hire.
+          .col-lg-13.mb-5.mb-lg-0
+            .feature.bg-primary.bg-gradient.text-white.rounded-3.mb-3
+              img.headShot.rounded-3(src="headshotPlaceholder.png")
+            h2.h4.fw-bolder Leihl Zambrano
+            p Pug enthusiast. Had traffic at work.
+          .col-lg-13.mb-5.mb-lg-0
+            .feature.bg-primary.bg-gradient.text-white.rounded-3.mb-3
+              img.headShot.rounded-3(src="headshotPlaceholder.png")
+            h2.h4.fw-bolder Louis Ogden
+            p Silver surfer. Aram enjoyer, and decent Renekton.
+          .col-lg-13.mb-5.mb-lg-0
+            .feature.bg-primary.bg-gradient.text-white.rounded-3.mb-3
+              img.headShot.rounded-3(src="headshotPlaceholder.png")
+            h2.h4.fw-bolder Nemsung Rai
+            p The person who made this. 36th best Slayer Player in the world.
+
+
 
     // Footer
-    footer
-      p &copy; 2025 ParkFlow. All Rights Reserved.
+    footer.py-5.bg-nav
+      .container.pix-5 
+        p.m-0.text-center.text-white Copyright &copy; 2025 ParkFlow. All Rights Reserved.
 
     script(src="script.js")
