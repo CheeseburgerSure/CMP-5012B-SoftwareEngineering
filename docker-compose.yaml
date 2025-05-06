@@ -1,0 +1,23 @@
+services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: dbUser
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: db1
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "dbUser", "-d", "db1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+    ports:
+      - "13000:3000"
+    depends_on:
+      db:
+        condition: service_healthy

@@ -1,14 +1,8 @@
-// Your imports
-import express from "express";
-import path from "path";
-import bodyParser from "body-parser";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-import session from "express-session";
-import favicon from "serve-favicon";
-import { createAccount, verifyAccount } from './controllers/accountController.js';
-import fs from 'fs';
-import { execSync } from 'child_process'; // <-- ADD THIS
+const express = require("express");
+const path = require("path");
+const bodyParser = require("body-parser");
+const session = require("express-session"); // For session management
+const { createAccount, verifyAccount } = require('./controllers/accountController.js'); // Import your account controller
 
 const app = express();
 const port = 3000;
