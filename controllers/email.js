@@ -28,9 +28,31 @@ async function sendEmail(to, subject, text) {
 }
 
 // Verification email helper
-async function sendVerificationEmail(to, code) {
-  const subject = 'Verify your account';
-  const text = `Your verification code is: ${code}`;
+// Should also send verification page /verify.pug
+async function sendVerificationEmail(to, code, firstName) {
+  const subject = 'Verify Your ParkFlow Account';
+  const verificationLink = `http://localhost:3000/verify?email=${encodeURIComponent(to)}&code=${code}`;
+
+  const text = `
+  Hi ${firstName},
+
+  Thank you for creating an account with ParkFlow!
+
+  To verify your email address and activate your account, please use the following 6-digit verification code:
+
+  🔐 Your code: ${code}
+
+  Alternatively, you can click the link below to verify your email:
+
+  ➡️ [Verify your account]( ${verificationLink} )
+
+  This code will expire in 10 minutes. Please do not share this code with anyone.
+
+  If you did not sign up for ParkFlow, please ignore this message.
+
+  Best regards,  
+  - The ParkFlow Team
+  `;
   await sendEmail(to, subject, text);
 }
 

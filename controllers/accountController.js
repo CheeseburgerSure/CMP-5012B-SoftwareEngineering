@@ -14,9 +14,7 @@ exports.getRegister = (req, res) => {
 
 // POST /register
 exports.postRegister = async (req, res) => {
-
-  // DEBUG
-  console.log('➡️ POST /createAccountForm triggered');
+  console.log('➡️ POST /register triggered');
   console.log('Request body:', req.body);
 
   const {
@@ -31,118 +29,103 @@ exports.postRegister = async (req, res) => {
     tos
   } = req.body;
 
-  // Server-side validation
-  // if (!firstName || !lastName || !countryCode || !phoneNumber || !email || !confirmEmail || !password || !confirmPassword || !tos) {
-  //   // res.render('create-account', { error: 'All fields are required.' });
-  //   console.log("Fields");
-  // }
+  // Email format validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.render('create-account', { error: 'Invalid email format.' });
+  }
 
-  if (!firstName) {
-    console.log("First name is required.");
+  if (!firstName || !lastName || !countryCode || !phoneNumber || !email || !confirmEmail || !password || !confirmPassword || !tos) {
+    return res.render('create-account', { error: 'All fields are required.' });
   }
-  
-  if (!lastName) {
-    console.log("Last name is required.");
-  }
-  
-  if (!countryCode) {
-    console.log("Country code is required.");
-  }
-  
-  if (!phoneNumber) {
-    console.log("Phone number is required.");
-  }
-  
-  if (!email) {
-    console.log("Email is required.");
-  }
-  
-  if (!confirmEmail) {
-    console.log("Confirm email is required.");
-  }
-  
-  if (!password) {
-    console.log("Password is required.");
-  }
-  
-  if (!confirmPassword) {
-    console.log("Confirm password is required.");
-  }
-  
-  if (!tos) {
-    console.log("Terms of service must be accepted.");
-  }
-  
+
   if (email !== confirmEmail) {
-    // res.render('create-account', { error: 'Emails do not match.' });
-    console.log("emails");
+    return res.render('create-account', { error: 'Emails do not match.' });
   }
 
   if (password !== confirmPassword) {
-    // res.render('create-account', { error: 'Passwords do not match.' });
-    console.log("Passwords");
+    return res.render('create-account', { error: 'Passwords do not match.' });
   }
 
-  // Optional: Validate phone number format
   const fullPhoneNumber = `${countryCode}${phoneNumber}`;
 
-
-  // ANTI SQL INJECTION VALIDATION
-  
   try {
-    // Check if email is already in use
-    const existingUser = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    // Check if email is already in use (case-insensitive)
+    const existingUser = await pool.query(
+      'SELECT * FROM users WHERE LOWER(email) = LOWER($1)',
+      [email]
+    );
+
     if (existingUser.rows.length > 0) {
       return res.render('create-account', { error: 'An account with this email already exists.' });
     }
-    console.log('New email account being used to create account')
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
     const verificationCode = generateVerificationCode();
-``
-    // Insert new user
+    const codeExpiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
     await pool.query(
-      'INSERT INTO users (first_name, last_name, country_code, phone_number, email, password_hash, verification_code) VALUES ($1, $2, $3, $4, $5, $6, $7)',
-      [firstName, lastName, countryCode, fullPhoneNumber, email, hashedPassword, verificationCode]
+      'INSERT INTO users (first_name, last_name, country_code, phone_number, email, password_hash, verification_code, code_expires_at) VALUES ($1, $2, $3, $4, LOWER($5), $6, $7, $8)',
+      [firstName, lastName, countryCode, fullPhoneNumber, email, hashedPassword, verificationCode, codeExpiresAt]
     );
 
-    // Send verification email
-    await sendVerificationEmail(email, verificationCode);
+    await sendVerificationEmail(email, verificationCode, firstName);
 
-    res.render('create-account', { success: 'Account created successfully! Check your email for the verification code.' });
+    res.render('create-account', {
+      success: 'Account created successfully! Check your email for the verification code.'
+    });
+
   } catch (err) {
     console.error(err);
     res.render('create-account', { error: 'Something went wrong. Please try again.' });
   }
 };
 
+// GET /verify
+exports.getVerify = (req, res) => {
+  const { email } = req.query;
+  res.render('verify', { email });
+};
+
 // POST /verify
 exports.verifyAccount = async (req, res) => {
-  const { email, verificationCode } = req.body;
+  const { email, verificationCodeInput } = req.body;
 
-  if (!email || !verificationCode) {
+  if (!email || !verificationCodeInput) {
     return res.render('verify', { error: 'Please provide both email and verification code.' });
   }
 
   try {
-    // Check if user exists with matching verification code
     const userResult = await pool.query(
-      'SELECT * FROM users WHERE email = $1 AND verification_code = $2',
-      [email, verificationCode]
+      'SELECT * FROM users WHERE LOWER(email) = LOWER($1)',
+      [email]
     );
 
     if (userResult.rows.length === 0) {
       return res.render('verify', { error: 'Invalid email or verification code.' });
     }
 
-    // Mark the user as verified
+    const user = userResult.rows[0];
+
+    if (user.verified) {
+      return res.redirect('/login?info=already_verified');
+    }
+
+    if (new Date() > new Date(user.code_expires_at)) {
+      return res.render('verify', { error: 'Verification code has expired.' });
+    }
+
+    if (user.verification_code !== verificationCodeInput) {
+      return res.render('verify', { error: 'Incorrect verification code.' });
+    }
+
     await pool.query(
-      'UPDATE users SET verified = TRUE, verification_code = NULL WHERE email = $1',
+      'UPDATE users SET verified = TRUE, verification_code = NULL WHERE LOWER(email) = LOWER($1)',
       [email]
     );
 
-    res.render('verify', { success: '✅ Your account has been verified successfully!' });
+    return res.redirect('/login?success=verified');
+
   } catch (err) {
     console.error(err);
     res.render('verify', { error: 'Something went wrong. Please try again.' });

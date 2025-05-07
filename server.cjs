@@ -52,6 +52,7 @@ app.get('/setup', async (req, res) => {
                 Password_Hash VARCHAR(255),
                 Verification_Code VARCHAR(100),
                 Verified BOOLEAN DEFAULT FALSE,
+                Code_Expires_At TIMESTAMP,
                 Created_At TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 Is_Admin BOOLEAN DEFAULT FALSE,
                 Is_Banned BOOLEAN DEFAULT FALSE,
@@ -102,29 +103,22 @@ app.get('/setup', async (req, res) => {
 // INSERT DATA INTO Users
 app.post('/insert', async (req, res) => {
     try {
-        const { first_name, last_name, email, password, phone_number, country_code, verification_code, is_admin, is_banned, license_number, balance } = req.body.user;
+        const { first_name, last_name, email, password, phone_number, country_code, verification_code, code_expires_at, is_admin, is_banned, license_number, balance } = req.body.user;
 
         // Insert into Users table
         await pool.query(`
             INSERT INTO Users (
                 First_Name, Last_Name, Email, Password_Hash, Phone_Number, Country_Code, 
-                Verification_Code, Verified, Is_Admin, Is_Banned, License_Number, 
-                Balance
+                Verification_Code, Verified, Code_Expires_At, Is_Admin, Is_Banned, 
+                License_Number, Balance
             ) VALUES (
-                $1, $2, $3, $4, $5, $6, $7, FALSE, $8, $9, $10, $11
+                $1, $2, $3, $4, $5, $6, $7, FALSE, $8, $9, $10, $11, $12
             );
         `, [
-            first_name, 
-            last_name, 
-            email, 
-            password, 
-            phone_number, 
-            country_code, 
-            verification_code, 
-            is_admin, 
-            is_banned, 
-            license_number, 
-            balance
+            first_name, last_name, email, 
+            password, phone_number, country_code, 
+            verification_code, code_expires_at, is_admin, 
+            is_banned, license_number, balance
         ]);
 
         console.log("✅ User inserted successfully.");
@@ -137,13 +131,11 @@ app.post('/insert', async (req, res) => {
 
 app.post('/clear', async (req, res) => {
     try {
-        await pool.query(
-            'DELETE FROM Users *'
-        )
+        await pool.query('DELETE FROM Users');
         res.status(200).send('cleared');
     } catch (error) {
         console.log(error);
-        res.status(500)
+        res.status(500).send('Internal server error');
     }
 }
 );

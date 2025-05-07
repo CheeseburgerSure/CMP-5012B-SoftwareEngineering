@@ -6,7 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "start": "node app.js",
-    "start:dev": "nodemon server.cjs",
+    "start:dev": "nodemon app.js",
     "dbdev": "node server.cjs"
   },
   "repository": {
@@ -32,6 +32,7 @@
     "serve-favicon": "^2.5.0"
   },
   "devDependencies": {
+    "concurrently": "^9.1.2",
     "nodemon": "^3.1.9"
   }
 }
