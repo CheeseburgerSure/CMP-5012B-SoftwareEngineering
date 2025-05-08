@@ -1,0 +1,79 @@
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Create Account | ParkFlow
+    link(rel="stylesheet" href="styles.css")
+    //script(src="/public/js/script.js")
+
+  body
+    // Navbar
+    nav.navbar
+      .logo ParkFlow
+      .menu-icon(onclick="toggleMenu()") &#9776;
+      ul.nav-links
+        li: a(href="/") Home
+        li: a(href="/login") Login
+        li: a(href="/create-account") Create Account
+    
+    // Create Account Content
+    .content
+      .form-container
+        h1 Create Account
+        form(id="create-account-form" action="/createAccountForm" method="POST")
+          // First and Last Name Fields
+          label(for="firstName") First Name
+          input(type="text" id="firstName" name="firstName" required)
+          
+          label(for="lastName") Last Name
+          input(type="text" id="lastName" name="lastName" required)
+          
+          // Phone Number Field with Country Code Dropdown
+          label(for="phoneNumber") Phone Number
+          .phone-input-container
+            select(id="countryCode" name="countryCode" required)
+              option(value="+44" data-flag="gb" selected) +44 (UK)
+              option(value="+1" data-flag="us") +1 (USA)
+              option(value="+61" data-flag="au") +61 (Australia)
+            input(type="tel" id="phoneNumber" name="phoneNumber" required placeholder="e.g., 123-456-7890")
+          
+          // Email Fields
+          label(for="email") Email
+          input(type="email" id="email" name="email" required)
+          
+          label(for="confirmEmail") Confirm Email
+          input(type="email" id="confirmEmail" name="confirmEmail" required)
+          
+          // Password Fields
+          label(for="password") Password
+          input(type="password" id="password" name="password" required)
+          
+          label(for="confirmPassword") Verify Password
+          input(type="password" id="confirmPassword" name="confirmPassword" required)
+          
+          // Terms and Conditions
+          .checkbox-container
+            input(type="checkbox" id="tos" name="tos" required)
+            label(for="tos") I accept the Terms and Conditions
+          
+          input(type="submit", value="CREATE ACCOUNT")
+        
+        p.signup-link Already have an account? 
+          a(href="/login") Sign in now!
+    
+    // Footer
+    footer
+      p &copy; 2025 ParkFlow. All Rights Reserved.
+      
+  script.
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("create-account-form");
+      if (form) {
+        form.addEventListener("submit", e => {
+          console.log("✅ Form is being submitted");
+        });
+      } else {
+        console.log("❌ Form not found in DOM");
+      }
+   });
+

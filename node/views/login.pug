@@ -1,0 +1,79 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Login | ParkFlow
+    link(rel="stylesheet" href="/styles.css")
+    link(rel="stylesheet" href="/bootstrap.css")
+
+  body
+    // Navigation
+    nav.navbar.navbar-expand-lg.navbar-dark.bg-nav 
+      .container.px-5 
+        img.img-thumbnail.m-sm-3.w-5(src="logo.png" alt="Park Flow Logo")
+        a.navbar-brand(href="/index") Parkflow
+        button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
+          span.navbar-toggler-icon
+        .collapse.navbar-collapse#navbarSupportedContent 
+          ul.navbar-nav.ms-auto.mb-2.mb-lg-0 
+            li.nav-item: a.nav-link(href="/index") Home
+            li.nav-item: a.nav-link.active(aria-current="page" href="/login") Login
+            li.nav-item: a.nav-link(href="/create-account") Create Account
+
+    // New Login Form
+    .container-fluid.ps-md-0.py-xxl-6
+      .row.g-0
+        .d-none.d-md-flex.col-md-4.col-lg-6.bg-image.justify-content-center
+          img.loginImg(src="logo.png")
+        .col-md-8.col-lg-6
+          .login.d-flex.align-items-center.py-5
+            .container
+              .row
+                .col-md-9.col-lg-8.mx-auto
+                  h3.login-heading.mb-4 Welcome back!
+
+                  // Success Message
+                  if successMessage
+                  .alert-success= successMessage
+
+                  // Login Form
+                  form(id="login-form" method="POST", action="/login")
+                    .form-floating.mb-3
+                      input#email.form-control(type="email" name="email" placeholder="Enter your email address" required)
+                      label(for='email') Email Address
+                    .form-floating.mb-3
+                      input#password.form-control(type="password" name="password" placeholder="Enter your password" required)
+                      label(for="password") Password
+                    .form-check.mb-3
+                      input#rememberPasswordCheck.form-check-input(type='checkbox' value='')
+                      label.form-check-label(for='rememberPasswordCheck') Remember password
+                    .d-grid
+                      button.btn.btn-lg.btn-primary.btn-login.text-uppercase.fw-bold.mb-2(type='submit') Sign in
+                      .text-center
+                        a.small(href='/forgot-password') Forgot password?
+                      .text-center
+                        .small Don't have an account? 
+                          a(href='/create-account') Create one now!
+
+                  // Display error message if there is any
+                  if error
+                    .alert.alert-danger
+                      | #{error}
+
+    // Footer
+    footer.py-5.bg-nav
+      .container.px-5 
+        p.m-0.text-center.text-white Copyright &copy; 2025 ParkFlow. All Rights Reserved.
+
+  script.
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("login-form");
+      if (form) {
+        form.addEventListener("submit", e => {
+          console.log("✅ Form is being submitted");
+        });
+      } else {
+        console.log("❌ Form not found in DOM");
+      }
+   });
