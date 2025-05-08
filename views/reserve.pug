@@ -1,0 +1,28 @@
+doctype html
+html
+  head
+    title Reserve a parking space
+    link(rel="stylesheet" href="css/main.css")
+  body
+    header
+      nav
+        ul
+            li: a(href="/") Home
+            li: a(href="/adminLogin") Admin Login
+            li: a(href="/adminPanel") Admin Panel
+            li: a(href="/createAccount") Create Account
+            li: a(href="/forgotPassword") Forgot Password
+            li: a(href="/login") Login
+            li: a(href="/payment") Payment
+            li: a(href="/reserve") Reserve
+            li: a(href="/resetPassword") Reset Password
+            li: a(href="/messenger") (Temp) Messenger
+    main
+      section
+        h1 RESERVE
+        form#reserveForm
+          label(for="destination") Enter destination...
+          br
+          input(type="text" id="destination" name="destination" value="Search by place name or postcode.")
+          input(type="submit" value="Search")
+    footer
