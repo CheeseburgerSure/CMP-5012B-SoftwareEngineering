@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 const pool = require('../db');
+const jwt = require('jsonwebtoken');
 const { sendVerificationEmail } = require('./email');
+
 
 // Handle sign-up form submission
 const postRegister = async (req, res) => {
@@ -51,8 +53,12 @@ const postRegister = async (req, res) => {
     // Send the verification email
     await sendVerificationEmail(email, code, firstName);
 
+    const token = jwt.sign({ email }, 'your-secret-key', { expiresIn: '10m' });
+
+    console.log('Token:', token);  // Debugging line
+    
     // Redirect to a page telling them to check their email
-    res.redirect(`/verify?email=${encodeURIComponent(email)}`);
+    res.redirect(`/verify?token=${token}`);
   } catch (err) {
     console.error(err);
     res.status(500).render('create-account', { error: 'Server error, please try again' });

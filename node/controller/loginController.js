@@ -32,6 +32,12 @@ const postLogin = async (req, res) => {
       return res.render('login', { error: 'Invalid email or password.' });
     }
 
+    console.log('Verified status from DB:', user.verified);
+    // Check if the user is verified
+    if (user.verified !== true) {
+      console.log('User not verified:', user); // Log to check the verified status
+      return res.render('login', { error: 'Your account is not verified. Please check your email for the verification link.' });
+    }
     // Store user session
     req.session.user = {
       id: user.id,

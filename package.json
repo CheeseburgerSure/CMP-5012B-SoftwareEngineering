@@ -6,7 +6,8 @@
   "type": "commonjs",
   "scripts": {
     "start": "node node/server.js",
-    "dev": "nodemon node/server.js"
+    "dev": "nodemon node/server.js",
+    "db": "docker-compose down && docker-compose up --build -d"
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-session": "^1.18.1",
+    "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.10.0",
     "pg": "^8.15.6",
     "pug": "^3.0.3",

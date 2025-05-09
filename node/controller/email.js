@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const jwt = require('jsonwebtoken');
 
 // Create a transporter object
 const transporter = nodemailer.createTransport({
@@ -28,10 +29,17 @@ async function sendEmail(to, subject, text) {
 }
 
 // Verification email helper
-// Should also send verification page /verify.pug
 async function sendVerificationEmail(to, code, firstName) {
   const subject = 'Verify Your ParkFlow Account';
-  const verificationLink = `http://localhost:3000/verify?email=${encodeURIComponent(to)}&code=${code}`;
+
+  // Generate a token with the email, verification code, and expiry
+  const token = jwt.sign(
+    { email: to, code: code },  // Data to encode in the token
+    'your-secret-key',          // Secret key to sign the token
+    { expiresIn: '10m' }        // Expiry time of 10 minutes
+  );
+
+  const verificationLink = `http://localhost:3000/verify?token=${token}`;
 
   const text = `
   Hi ${firstName},

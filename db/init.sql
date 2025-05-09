@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS "Users" (
     Balance DECIMAL(10, 2) DEFAULT 0.00
 );
 
--- Insert admin user
+-- Insert users
 INSERT INTO "Users" (
     Email, 
     First_Name, 
@@ -32,7 +32,8 @@ INSERT INTO "Users" (
     License_Number, 
     Balance
 )
-VALUES (
+VALUES
+(
     'parkflow113@gmail.com', 
     'Parkflow', 
     'Admin', 
@@ -47,4 +48,20 @@ VALUES (
     FALSE,  -- Not banned
     'XYZ987654',  -- Dummy license number (replace if needed)
     100.00  -- Starting balance
+),
+(
+    'itsleihl@gmail.com',  -- Replace with the new user's email
+    'Leihl',                 -- First Name
+    'Zambrano',              -- Last Name
+    '+44',                   -- Country Code
+    '9876543210',           -- Phone Number
+    '$2b$12$cE26VdAa8d/LL2MY6oxgsOhTKyrkbeudYaJ4oQwAi0RhlUPy8G71K',  -- Use the bcrypt-hashed password
+    '123456',  -- A generated or static verification code
+    FALSE,                  -- Set to false initially (user not verified yet)
+    NOW() + INTERVAL '1 hour',  -- Verification code expires in 1 hour
+    NOW(),                  -- Account creation time
+    FALSE,                  -- Non-admin user
+    FALSE,                  -- User is not banned
+    'XYZ123456',            -- License Number (if needed)
+    50.00                   -- Initial balance
 );

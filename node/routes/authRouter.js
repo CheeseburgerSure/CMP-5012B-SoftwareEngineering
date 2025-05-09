@@ -4,7 +4,7 @@ const verifyController = require('../controller/verifyController');
 
 // GET route to render the verify page
 router.get('/verify', (req, res) => {
-  res.render('verify'); // Render the verify page
+  verifyController.getVerifyPage(req, res);
 });
 
 // Handle verify form POST

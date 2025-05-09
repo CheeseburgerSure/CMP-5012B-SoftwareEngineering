@@ -19,20 +19,24 @@ html(lang="en")
     // Verify Account Content
     .content
       .form-container
-        h1 Verify Your Account
-        p An email has been sent to your inbox with a 6-digit verification code. Please enter it below to complete your account creation.
-        p If you don't see the email, be sure to check your spam folder.
+        if success
+          h1 Account Verified!
+          p Your account has been successfully created!
+          a(href="/login") Go to login
+        else
+          h1 Verify Your Account
+          p An email has been sent to your inbox with a 6-digit verification code. Please enter it below to complete your account creation.
+          p If you don't see the email, be sure to check your spam folder.
 
-        form(action="/verify" method="POST")
-          input(type="hidden" name="email" value="#{email}")
-          
-          label(for="verificationCodeInput") Verification Code
-          input(type="text" id="verificationCodeInput" name="code" maxlength="6" required)
+          if error
+            p(style="color: red") #{error}
 
-          button(type="submit") Verify Account
+          form(action="/verify" method="POST")
+            label(for="verificationCodeInput") Verification Code
+            input(type="text" id="verificationCodeInput" name="code" maxlength="6" required)
+
+            button(type="submit") Verify Account
 
     // Footer
     footer
       p &copy; 2025 ParkFlow. All Rights Reserved.
-
-    script(src="/public/js/script")
