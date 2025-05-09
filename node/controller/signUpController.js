@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const pool = require('../db');
+const { sendVerificationEmail } = require('./email');
 
 // Handle sign-up form submission
 const postRegister = async (req, res) => {
@@ -35,14 +36,23 @@ const postRegister = async (req, res) => {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Generate 6-digit code
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes from now
+
     // Insert the user into the database
     const newUser = await pool.query(
-      'INSERT INTO "Users" (Email, First_Name, Last_Name, Country_Code, Phone_Number, Password_Hash, Verified) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-      [email, firstName, lastName, countryCode, phoneNumber, hashedPassword, false]  // Setting Verified to false initially
+      `INSERT INTO "Users" (Email, First_Name, Last_Name, Country_Code, Phone_Number, Password_Hash, Verified, Verification_Code, Code_Expires_At)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+      [email, firstName, lastName, countryCode, phoneNumber, hashedPassword, false, code, expiry]
     );
 
-    // After successful registration, redirect to login page or other page
-    res.redirect('/login');
+
+    // Send the verification email
+    await sendVerificationEmail(email, code, firstName);
+
+    // Redirect to a page telling them to check their email
+    res.redirect(`/verify?email=${encodeURIComponent(email)}`);
   } catch (err) {
     console.error(err);
     res.status(500).render('create-account', { error: 'Server error, please try again' });

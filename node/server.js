@@ -6,9 +6,11 @@ const session = require('express-session');
 
 const port = process.env.PORT || 3000;
 
+// Routers
 const loginRouter = require('./routes/loginRouter');
 const signUpRouter = require('./routes/signUpRouter');
 const logoutRouter = require('./routes/logoutRouter');
+const authRoutes = require('./routes/authRoutes');
 
 // Set views and view engine
 app.set("views", path.join(__dirname, "views"));
@@ -38,6 +40,7 @@ console.log("✅ loginRouter mounted");
 app.use('/', signUpRouter);  // Handles routes like /createAccountForm
 console.log("✅ signUpRouter mounted");
 app.use(logoutRouter);
+app.use('/', authRoutes);
 
 // Serve static files from the 'public' folder
 app.use(express.static(path.join(__dirname, 'public')));
@@ -51,11 +54,16 @@ app.get("/create-account", (req, res) => {
   res.render("create-account");
 });
 
+// Dashboard route (only accessible if the user is logged in)
 app.get('/dashboard', (req, res) => {
-    res.render('dashboard', { user: req.session.user });
+  if (!req.session.user) {
+    return res.redirect('/login'); // Redirect to login if the user is not logged in
+  }
+  res.render('dashboard', { user: req.session.user }); // Pass user data to dashboard
 });
+
 
 // Start the server
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`🚀 Server running at http://localhost:${port} 🚀`);
 });

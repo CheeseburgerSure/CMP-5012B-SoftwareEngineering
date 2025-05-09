@@ -25,10 +25,9 @@ html(lang="en")
 
         form(action="/verify" method="POST")
           input(type="hidden" name="email" value="#{email}")
-          input(type="hidden" name="verificationCode" value="#{verificationCode}")
           
           label(for="verificationCodeInput") Verification Code
-          input(type="text" id="verificationCodeInput" name="verificationCodeInput" maxlength="6" required)
+          input(type="text" id="verificationCodeInput" name="code" maxlength="6" required)
 
           button(type="submit") Verify Account
 
