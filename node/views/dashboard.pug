@@ -21,16 +21,16 @@ html(lang="en")
     // User Dashboard Content
     .content
       .form-container
-        h1 Welcome to Your Dashboard
+        h1 Welcome to Your Dashboard, #{firstName}!
 
         // Available Balance and Ongoing Sessions
         section#dashboard-stats
           .stat-box
             h3 Available Balance
-            p £50.00
+            p £#{balance}
           .stat-box
             h3 Ongoing Sessions
-            p: a(href="/session-details") 2 Active
+            p: a(href="/session-details") #{sessions} Active  // Replace with dynamic session count
 
         // Links to other pages with icons
         section#dashboard-links
@@ -55,5 +55,3 @@ html(lang="en")
     // Footer
     footer
       p &copy; 2025 ParkFlow. All Rights Reserved.
-
-    script(src="script.js")

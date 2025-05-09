@@ -10,7 +10,8 @@ const port = process.env.PORT || 3000;
 const loginRouter = require('./routes/loginRouter');
 const signUpRouter = require('./routes/signUpRouter');
 const logoutRouter = require('./routes/logoutRouter');
-const authRoutes = require('./routes/authRoutes');
+const authRoutes = require('./routes/authRouter');
+const dashboardRouter = require('./routes/dashboardRouter');
 
 // Set views and view engine
 app.set("views", path.join(__dirname, "views"));
@@ -34,13 +35,12 @@ app.use((req, res, next) => {
     next();
   });
 
-// Use routers for login and sign-up with specific routes
-app.use('/', loginRouter);  // Handles routes like /login
-console.log("✅ loginRouter mounted");
-app.use('/', signUpRouter);  // Handles routes like /createAccountForm
-console.log("✅ signUpRouter mounted");
+
+app.use('/', loginRouter)
+app.use('/', signUpRouter);
 app.use(logoutRouter);
 app.use('/', authRoutes);
+app.use('/dashboard', dashboardRouter);
 
 // Serve static files from the 'public' folder
 app.use(express.static(path.join(__dirname, 'public')));
@@ -53,15 +53,6 @@ app.get('/', (req, res) => {
 app.get("/create-account", (req, res) => {
   res.render("create-account");
 });
-
-// Dashboard route (only accessible if the user is logged in)
-app.get('/dashboard', (req, res) => {
-  if (!req.session.user) {
-    return res.redirect('/login'); // Redirect to login if the user is not logged in
-  }
-  res.render('dashboard', { user: req.session.user }); // Pass user data to dashboard
-});
-
 
 // Start the server
 app.listen(port, () => {
