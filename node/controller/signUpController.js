@@ -9,31 +9,58 @@ const postRegister = async (req, res) => {
   const { firstName, lastName, countryCode, phoneNumber, email, confirmEmail, password, confirmPassword } = req.body;
 
   // Validation
+  const errors = {}; // Object to hold error messages
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
-    return res.render('create-account', { error: 'Invalid email format.' });
+    errors.email = 'Invalid email format.';
   }
-  
+
   if (!firstName || !lastName || !countryCode || !phoneNumber || !email || !confirmEmail || !password || !confirmPassword) {
-    return res.render('create-account', { error: 'All fields are required' });
+    errors.general = 'All fields are required.';
   }
 
   if (email !== confirmEmail) {
-    return res.render('create-account', { error: 'Emails do not match' });
+    errors.confirmEmail = 'Emails do not match.';
   }
 
   if (password !== confirmPassword) {
-    return res.render('create-account', { error: 'Passwords do not match' });
+    errors.confirmPassword = 'Passwords do not match.';
   }
 
-  if (16 > password.length < 8) {
-    return res.render('create-account', { error: 'Password must be at least 8 characters long and maximum 16 characters' });
+  if (password.length < 8 || password.length > 16) {
+    errors.password = 'Password must be at least 8 characters long and a maximum of 16 characters.';
   }
 
-  const passwordStrengthRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-  if (!passwordStrengthRegex.test(password)) {
-    return res.render('create-account', { error: 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.' });
+  if (!/[A-Z]/.test(password)) {
+    errors.password = 'Password must contain at least one uppercase letter.';
+  }
+
+  if (!/[a-z]/.test(password)) {
+    errors.password = 'Password must contain at least one lowercase letter.';
+  }
+
+  if (!/[0-9]/.test(password)) {
+    errors.password = 'Password must contain at least one number.';
+  }
+
+  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    errors.password = 'Password must contain at least one special character.';
+  }
+
+  // If there are any errors, re-render the form with error messages
+  if (Object.keys(errors).length > 0) {
+    return res.render('create-account', {
+      error: errors,
+      firstName,
+      lastName,
+      countryCode,
+      phoneNumber,
+      email,
+      confirmEmail,
+      password,
+      confirmPassword
+    });
   }
 
   try {
