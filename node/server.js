@@ -29,13 +29,6 @@ app.use(session({
     cookie: { secure: false }  // Set to true if using HTTPS
 }));
 
-
-app.use((req, res, next) => {
-    console.log(`${req.method} ${req.url}`);
-    next();
-  });
-
-
 app.use('/', loginRouter)
 app.use('/', signUpRouter);
 app.use(logoutRouter);

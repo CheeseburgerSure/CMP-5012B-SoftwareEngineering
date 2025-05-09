@@ -27,6 +27,15 @@ const postRegister = async (req, res) => {
     return res.render('create-account', { error: 'Passwords do not match' });
   }
 
+  if (16 > password.length < 8) {
+    return res.render('create-account', { error: 'Password must be at least 8 characters long and maximum 16 characters' });
+  }
+
+  const passwordStrengthRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+  if (!passwordStrengthRegex.test(password)) {
+    return res.render('create-account', { error: 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.' });
+  }
+
   try {
     // Check if the email already exists
     const emailCheck = await pool.query('SELECT * FROM "Users" WHERE Email = $1', [email]);
@@ -56,7 +65,7 @@ const postRegister = async (req, res) => {
     const token = jwt.sign({ email }, 'your-secret-key', { expiresIn: '10m' });
 
     console.log('Token:', token);  // Debugging line
-    
+
     // Redirect to a page telling them to check their email
     res.redirect(`/verify?token=${token}`);
   } catch (err) {
