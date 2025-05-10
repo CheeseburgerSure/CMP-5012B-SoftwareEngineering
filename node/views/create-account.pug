@@ -23,14 +23,10 @@ html(lang="en")
         form(id="create-account-form" action="/createAccountForm" method="POST")
           // First and Last Name Fields
           label(for="firstName") First Name
-          input(type="text" id="firstName" name="firstName" required value=firstName)
-          if error.firstName
-            p.error #{error.firstName}
+          input(type="text" id="firstName" name="firstName" required)
           
           label(for="lastName") Last Name
-          input(type="text" id="lastName" name="lastName" required value=lastName)
-          if error.lastName
-            p.error #{error.lastName}
+          input(type="text" id="lastName" name="lastName" required)
           
           // Phone Number Field with Country Code Dropdown
           label(for="phoneNumber") Phone Number
@@ -39,38 +35,26 @@ html(lang="en")
               option(value="+44" data-flag="gb" selected) +44 (UK)
               option(value="+1" data-flag="us") +1 (USA)
               option(value="+61" data-flag="au") +61 (Australia)
-            input(type="tel" id="phoneNumber" name="phoneNumber" required placeholder="e.g., 123-456-7890" value=phoneNumber)
-          if error.phoneNumber
-            p.error #{error.phoneNumber}
+            input(type="tel" id="phoneNumber" name="phoneNumber" required placeholder="e.g., 123-456-7890")
           
           // Email Fields
           label(for="email") Email
-          input(type="email" id="email" name="email" required value=email)
-          if error.email
-            p.error #{error.email}
+          input(type="email" id="email" name="email" required)
           
           label(for="confirmEmail") Confirm Email
-          input(type="email" id="confirmEmail" name="confirmEmail" required value=confirmEmail)
-          if error.confirmEmail
-            p.error #{error.confirmEmail}
+          input(type="email" id="confirmEmail" name="confirmEmail" required)
           
           // Password Fields
           label(for="password") Password
-          input(type="password" id="password" name="password" required value=password)
-          if error.password
-            p.error #{error.password}
+          input(type="password" id="password" name="password" required)
           
           label(for="confirmPassword") Verify Password
-          input(type="password" id="confirmPassword" name="confirmPassword" required value=confirmPassword)
-          if error.confirmPassword
-            p.error #{error.confirmPassword}
+          input(type="password" id="confirmPassword" name="confirmPassword" required)
           
           // Terms and Conditions
           .checkbox-container
             input(type="checkbox" id="tos" name="tos" required)
             label(for="tos") I accept the Terms and Conditions
-          if error.tos
-            p.error #{error.tos}
           
           input(type="submit" value="CREATE ACCOUNT")
         
