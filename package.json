@@ -5,9 +5,9 @@
   "main": "app.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node app.js",
-    "start:dev": "nodemon app.js",
-    "dbdev": "node server.cjs"
+    "start": "node node/server.js",
+    "dev": "nodemon node/server.js",
+    "db": "docker-compose down && docker-compose up --build -d"
   },
   "repository": {
     "type": "git",
@@ -22,10 +22,11 @@
   "keywords": [],
   "dependencies": {
     "bcrypt": "^5.1.1",
-    "cors": "^2.8.5",
+    "body-parser": "^2.2.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-session": "^1.18.1",
+    "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.10.0",
     "pg": "^8.15.6",
     "pug": "^3.0.3",

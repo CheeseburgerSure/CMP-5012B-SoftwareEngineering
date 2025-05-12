@@ -1,10 +1,10 @@
 const { Pool } = require('pg')
 const pool = new Pool({
-    host: 'localhost',
+    host: 'parkflow-db',
     port: 5432,
     user: 'dbUser',
     password: '123',
-    database: 'db1'
+    database: 'parkflow113-db'
 })
 
 module.exports = pool

@@ -1,0 +1,19 @@
+
+services:
+  parkflow-db:
+    image: postgres:13
+    container_name: parkflow-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: parkflow113-db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - parking-system-network
+
+networks:
+  parking-system-network:
+    driver: bridge

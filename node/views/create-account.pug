@@ -1,0 +1,99 @@
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Create Account | ParkFlow
+    link(rel="stylesheet" href="styles.css")
+
+  body
+    // Navbar
+    nav.navbar
+      .logo ParkFlow
+      .menu-icon(onclick="toggleMenu()") &#9776;
+      ul.nav-links
+        li: a(href="/") Home
+        li: a(href="/login") Login
+        li: a(href="/create-account") Create Account
+
+    // Create Account Content
+    .content
+      .form-container
+        h1 Create Account
+
+        // General error
+        if error && error.general
+          p.error #{error.general}
+
+        form(id="create-account-form" action="/createAccountForm" method="POST")
+
+          // First and Last Name Fields
+          label(for="firstName") First Name
+          input(type="text" id="firstName" name="firstName" required value=firstName || '')
+          if error && error.firstName
+            p.error #{error.firstName}
+          
+          label(for="lastName") Last Name
+          input(type="text" id="lastName" name="lastName" required value=lastName || '')
+          if error && error.lastName
+            p.error #{error.lastName}
+          
+          // Phone Number Field with Country Code Dropdown
+          label(for="phoneNumber") Phone Number
+          .phone-input-container
+            select(id="countryCode" name="countryCode" required)
+              option(value="+44" data-flag="gb" selected=countryCode === '+44') +44 (UK)
+              option(value="+1" data-flag="us" selected=countryCode === '+1') +1 (USA)
+              option(value="+61" data-flag="au" selected=countryCode === '+61') +61 (Australia)
+            input(type="tel" id="phoneNumber" name="phoneNumber" required placeholder="e.g., 123-456-7890" value=phoneNumber || '')
+          if error && error.phoneNumber
+            p.error #{error.phoneNumber}
+          
+          // Email Fields
+          label(for="email") Email
+          input(type="email" id="email" name="email" required value=email || '')
+          if error && error.email
+            p.error #{error.email}
+          
+          label(for="confirmEmail") Confirm Email
+          input(type="email" id="confirmEmail" name="confirmEmail" required value=confirmEmail || '')
+          if error && error.confirmEmail
+            p.error #{error.confirmEmail}
+          
+          // Password Fields
+          label(for="password") Password
+          input(type="password" id="password" name="password" required value=password || '')
+          if error && error.password
+            p.error #{error.password}
+          
+          label(for="confirmPassword") Verify Password
+          input(type="password" id="confirmPassword" name="confirmPassword" required value=confirmPassword || '')
+          if error && error.confirmPassword
+            p.error #{error.confirmPassword}
+          
+          // Terms and Conditions
+          .checkbox-container
+            input(type="checkbox" id="tos" name="tos" required)
+            label(for="tos") I accept the Terms and Conditions
+          if error && error.tos
+            p.error #{error.tos}
+          
+          input(type="submit" value="CREATE ACCOUNT")
+        
+        p.signup-link Already have an account? 
+          a(href="/login") Sign in now!
+    
+    // Footer
+    footer
+      p &copy; 2025 ParkFlow. All Rights Reserved.
+
+  script.
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("create-account-form");
+      if (form) {
+        form.addEventListener("submit", e => {
+          console.log("✅ Form is being submitted");
+        });
+      } else {
+        console.log("❌ Form not found in DOM");
+      }
+    });
