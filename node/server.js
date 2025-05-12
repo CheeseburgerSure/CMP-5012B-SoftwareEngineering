@@ -30,6 +30,10 @@ app.use(session({
   cookie: { maxAge: 1000 * 60 * 60 * 24 }
 }));
 
+// Routes
+app.get('/', (req, res) => {
+  res.render('index');
+});
 app.use('/', loginRouter)
 app.use('/', signUpRouter);
 app.use(logoutRouter);
@@ -39,11 +43,6 @@ app.use('/', detailsRouter);
 
 // Serve static files from the 'public' folder
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Routes
-app.get('/', (req, res) => {
-  res.render('index');
-});
 
 app.get("/create-account", (req, res) => {
   res.render("create-account");
