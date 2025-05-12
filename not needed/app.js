@@ -5,7 +5,6 @@ const session = require("express-session");
 const favicon = require("serve-favicon");
 const fs = require("fs");
 const { execSync } = require("child_process");
-const { postRegister, verifyAccount } = require('./controllers/accountController.js');
 
 const app = express();
 const port = 3000;

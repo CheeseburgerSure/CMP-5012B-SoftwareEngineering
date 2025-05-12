@@ -3,20 +3,63 @@ const pool = require('../db');
 const jwt = require('jsonwebtoken');
 const { sendVerificationEmail } = require('./email');
 
+// Helper: Validate password strength
+function validatePassword(password) {
+  const errors = [];
 
-// Handle sign-up form submission
-const postRegister = async (req, res) => {
-  const { firstName, lastName, countryCode, phoneNumber, email, confirmEmail, password, confirmPassword } = req.body;
-
-  // Validation
-  const errors = {}; // Object to hold error messages
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    errors.email = 'Invalid email format.';
+  if (password.length < 8 || password.length > 16) {
+    errors.push('Password must be between 8 and 16 characters.');
+  }
+  if (!/[A-Z]/.test(password)) {
+    errors.push('Password must include at least one uppercase letter.');
+  }
+  if (!/[a-z]/.test(password)) {
+    errors.push('Password must include at least one lowercase letter.');
+  }
+  if (!/[0-9]/.test(password)) {
+    errors.push('Password must include at least one number.');
+  }
+  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    errors.push('Password must include at least one special character.');
   }
 
-  if (!firstName || !lastName || !countryCode || !phoneNumber || !email || !confirmEmail || !password || !confirmPassword) {
+  return errors;
+}
+
+// Helper: Render error form
+function renderWithError(res, error, data) {
+  return res.render('create-account', {
+    error,
+    ...data
+  });
+}
+
+const postRegister = async (req, res) => {
+  let {
+    firstName,
+    lastName,
+    countryCode,
+    phoneNumber,
+    email,
+    confirmEmail,
+    password,
+    confirmPassword
+  } = req.body;
+
+  const errors = {};
+  const formData = { firstName, lastName, countryCode, phoneNumber, email, confirmEmail, password, confirmPassword };
+
+  // Normalize email
+  email = email.toLowerCase();
+  confirmEmail = confirmEmail.toLowerCase();
+
+  // Basic validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email || !emailRegex.test(email)) {
+    errors.email = 'Invalid or missing email.';
+  }
+
+  if (!firstName || !lastName || !countryCode || !phoneNumber || !confirmEmail || !password || !confirmPassword) {
     errors.general = 'All fields are required.';
   }
 
@@ -28,76 +71,52 @@ const postRegister = async (req, res) => {
     errors.confirmPassword = 'Passwords do not match.';
   }
 
-  if (password.length < 8 || password.length > 16) {
-    errors.password = 'Password must be at least 8 characters long and a maximum of 16 characters.';
+  const passwordErrors = validatePassword(password);
+  if (passwordErrors.length > 0) {
+    errors.password = passwordErrors;
   }
 
-  if (!/[A-Z]/.test(password)) {
-    errors.password = 'Password must contain at least one uppercase letter.';
+  // Optional: Validate phone number format (basic length check)
+  if (!/^\d{7,15}$/.test(phoneNumber)) {
+    errors.phoneNumber = 'Invalid phone number format.';
   }
 
-  if (!/[a-z]/.test(password)) {
-    errors.password = 'Password must contain at least one lowercase letter.';
-  }
-
-  if (!/[0-9]/.test(password)) {
-    errors.password = 'Password must contain at least one number.';
-  }
-
-  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-    errors.password = 'Password must contain at least one special character.';
-  }
-
-  // If there are any errors, re-render the form with error messages
   if (Object.keys(errors).length > 0) {
-    return res.render('create-account', {
-      error: errors,
-      firstName,
-      lastName,
-      countryCode,
-      phoneNumber,
-      email,
-      confirmEmail,
-      password,
-      confirmPassword
-    });
+    return renderWithError(res, errors, formData);
   }
 
   try {
-    // Check if the email already exists
-    const emailCheck = await pool.query('SELECT * FROM "Users" WHERE Email = $1', [email]);
-
+    // Check for existing user
+    const emailCheck = await pool.query('SELECT * FROM "Users" WHERE LOWER(Email) = $1', [email]);
     if (emailCheck.rows.length > 0) {
-      return res.render('create-account', { error: 'Email is already in use' });
+      return renderWithError(res, { email: 'Email is already in use.' }, formData);
     }
 
-    // Hash the password
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Generate 6-digit code
+    // Generate verification code
     const code = Math.floor(100000 + Math.random() * 900000).toString();
-    const expiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes from now
+    const expiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-    // Insert the user into the database
-    const newUser = await pool.query(
-      `INSERT INTO "Users" (Email, First_Name, Last_Name, Country_Code, Phone_Number, Password_Hash, Verified, Verification_Code, Code_Expires_At)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+    // Insert user
+    await pool.query(
+      `INSERT INTO "Users" 
+       (Email, First_Name, Last_Name, Country_Code, Phone_Number, Password_Hash, Verified, Verification_Code, Code_Expires_At)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
       [email, firstName, lastName, countryCode, phoneNumber, hashedPassword, false, code, expiry]
     );
 
-
-    // Send the verification email
+    // Send verification email
     await sendVerificationEmail(email, code, firstName);
 
-    const token = jwt.sign({ email }, 'your-secret-key', { expiresIn: '10m' });
+    // Generate JWT
+    const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '10m' });
 
-    console.log('Token:', token);  // Debugging line
-
-    // Redirect to a page telling them to check their email
-    res.redirect(`/verify?token=${token}`);
+    return res.redirect(`/verify?token=${token}`);
   } catch (err) {
-    console.error(err);
-    res.status(500).render('create-account', { error: 'Server error, please try again' });
+    console.error('Registration error:', err);
+    return renderWithError(res, { general: 'Server error, please try again.' }, formData);
   }
 };
 

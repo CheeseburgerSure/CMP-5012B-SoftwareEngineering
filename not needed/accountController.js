@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
-const pool = require('../db');  // db.js
-const { sendVerificationEmail } = require('./email.js');  // email.js
+const pool = require('../node/db.js');  // db.js
+const { sendVerificationEmail } = require('../node/controller/email.js');  // email.js
 
 // Generate 6-digit code
 function generateVerificationCode() {
