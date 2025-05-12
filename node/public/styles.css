@@ -346,3 +346,33 @@
   font-size: 0.9rem;
   margin-top: 4px;
 }
+
+/* FOR DETAILS PAGE */
+
+.details-box {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 600px;
+  margin: 2rem auto;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+
+.detail-row label {
+  font-weight: bold;
+}
+
+.btn-change {
+  background-color: #007bff;
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  text-decoration: none;
+}
