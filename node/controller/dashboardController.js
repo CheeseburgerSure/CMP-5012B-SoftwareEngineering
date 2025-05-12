@@ -21,8 +21,8 @@ const getDashboardData = async (req, res) => {
     // Render dashboard and pass user details (name, balance)
     res.render('dashboard', {
       user: req.session.user,  // pass full user data for the dashboard
-      firstName: user.First_Name,
-      lastName: user.Last_Name,
+      firstName: user.first_name,
+      lastName: user.last_name,
       balance: balance.toFixed(2), // Format balance as a decimal (e.g., 50.00)
       sessions: 2 // Example session count, replace with actual session data
     });

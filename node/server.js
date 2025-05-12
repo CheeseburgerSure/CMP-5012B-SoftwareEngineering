@@ -23,10 +23,10 @@ app.use(express.json());
 
 // Session configuration
 app.use(session({
-    secret: 'your-secret-key',  // Replace with a strong secret in production
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: false }  // Set to true if using HTTPS
+  secret: 'your-secret-key',  // Replace with a strong secret in production
+  resave: false,
+  saveUninitialized: true,
+  cookie: { maxAge: 1000 * 60 * 60 * 24 }
 }));
 
 app.use('/', loginRouter)
