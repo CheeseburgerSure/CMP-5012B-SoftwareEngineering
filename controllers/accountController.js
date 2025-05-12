@@ -1,54 +1,81 @@
-// controllers/accountController.js
-import { sendEmail } from './email.js';  // Import the email sender
-//import { users } from './database.js';  // You will need to store user data somewhere (like a database or in memory)
+const { sendEmail } = require('./email.js');
+const pool = require('../db.js');
+const bcrypt = require('bcrypt');
 
-// Example user store
-const users = [];
-
-let verificationCode = ''; // Store the verification code for the session (or a database)
-
-export async function createAccount(req, res) {
+exports.createAccount = async function (req, res) {
   const { email, confirmEmail, password, confirmPassword, tos } = req.body;
 
   // Validation
   if (email !== confirmEmail) {
-    return res.send('Emails do not match!');
+    return res.status(400).send('Emails do not match!');
   }
 
   if (password !== confirmPassword) {
-    return res.send('Passwords do not match!');
+    return res.status(400).send('Passwords do not match!');
   }
 
   if (!tos) {
-    return res.send('You must accept the terms and conditions!');
+    return res.status(400).send('You must accept the terms and conditions!');
   }
 
-  // Generate a unique verification code
-  verificationCode = Math.floor(100000 + Math.random() * 900000); // Generate a 6-digit number
-  const verificationLink = `http://localhost:3000/verify`;
+  try {
+    // Generate a unique verification code
+    const verificationCode = Math.floor(100000 + Math.random() * 900000);
+    const verificationLink = `http://localhost:3000/verify?email=${email}&code=${verificationCode}`;
 
-  // Send verification email
-  await sendEmail(email, 'Account Verification', `Your verification code is: ${verificationCode}. Visit this link to confirm: ${verificationLink}`);
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-  // Store user data temporarily (You should save it to a real database)
-  users.push({ email, password, verified: false });
-  res.redirect('/verify');
-}
+    // Insert the user into the database
+    const query = `
+      INSERT INTO Users (email, password, verified, verification_code)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *;
+    `;
+    const values = [email, hashedPassword, false, verificationCode];
 
-// Handle verification
-export function verifyAccount(req, res) {
-  const { verificationCode: enteredCode } = req.body;
+    await pool.query(query, values);
 
-  // Check if entered code matches the generated code
-  if (enteredCode == verificationCode) {
-    // Mark the user as verified
-    const user = users.find(u => u.email === req.body.email); // You'd get email from the session or request
-    if (user) {
-      user.verified = true;
-      return res.send('Account verified successfully!');
+    // Send verification email
+    await sendEmail(
+      email,
+      'Account Verification',
+      `Your verification code is: ${verificationCode}. Visit this link to confirm: ${verificationLink}`
+    );
+
+    res.redirect('/verify');
+  } catch (error) {
+    console.error('Error creating account:', error);
+    res.status(500).send('Error creating account.');
+  }
+};
+
+exports.verifyAccount = async function (req, res) {
+  const { email, verificationCode: enteredCode } = req.body;
+
+  try {
+    // Find the user by email and check verification code
+    const query = `SELECT * FROM users WHERE email = $1;`;
+    const { rows } = await pool.query(query, [email]);
+
+    if (rows.length === 0) {
+      return res.status(404).send('Account not found!');
     }
-    return res.send('Account not found!');
-  } else {
-    return res.send('Invalid verification code!');
+
+    const user = rows[0];
+
+    if (parseInt(enteredCode) === user.verification_code) {
+      // Update the user to mark as verified
+      await pool.query(
+        `UPDATE users SET verified = true WHERE email = $1;`,
+        [email]
+      );
+      return res.send('Account verified successfully!');
+    } else {
+      return res.status(400).send('Invalid verification code!');
+    }
+  } catch (error) {
+    console.error('Error verifying account:', error);
+    res.status(500).send('Error verifying account.');
   }
-}
+};

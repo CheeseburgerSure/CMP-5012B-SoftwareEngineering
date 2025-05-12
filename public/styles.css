@@ -310,6 +310,13 @@
   .headShot{
     height: 50px;
   }
+
+  /* Login Page */
+
+  .loginImg{
+    max-height:500px;
+    width: auto;    
+  }
   
   /* Media Queries for Mobile */
   @media (max-width: 768px) {
