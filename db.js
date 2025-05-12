@@ -1,10 +1,15 @@
-const { Pool } = require('pg')
-const pool = new Pool({
-    host: 'parkflow-db',
-    port: 5432,
-    user: 'dbUser',
-    password: '123',
-    database: 'parkflow113-db'
-})
+// Load environment variables from the .env file
+require('dotenv').config();
 
-module.exports = pool
+const { Pool } = require('pg');
+
+// Create a pool using the environment variables
+const pool = new Pool({
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT || 5432,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME
+});
+
+module.exports = pool;

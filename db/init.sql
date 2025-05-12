@@ -1,5 +1,10 @@
+-- Create Extensions
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- Users Table
 CREATE TABLE IF NOT EXISTS "Users" (
-    Email VARCHAR(100) PRIMARY KEY,
+    UserID UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    Email VARCHAR(100),
     First_Name VARCHAR(100),
     Last_Name VARCHAR(100),
     Country_Code VARCHAR(10),
@@ -15,8 +20,31 @@ CREATE TABLE IF NOT EXISTS "Users" (
     Balance DECIMAL(10, 2) DEFAULT 0.00
 );
 
+-- Booking Table
+CREATE TABLE IF NOT EXISTS "Booking" (
+    BookingID SERIAL PRIMARY KEY,
+    UserID UUID,
+    Location VARCHAR(255),
+    Time_Booked_for TIME,
+    Duration INTERVAL,
+    Booking_Date DATE,
+    Price DECIMAL(10, 2),
+    Booking_Paid BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (UserID) REFERENCES "Users" (UserID)
+);
+
+-- Parking Location
+CREATE TABLE IF NOT EXISTS "ParkingLot" (
+    LocationID SERIAL PRIMARY KEY,
+    Location VARCHAR(100),
+    Parking_Spaces INTEGER,
+    Occupied_Spaces INTEGER,
+    Rate DECIMAL(10, 2)
+);
+
 -- Insert users
 INSERT INTO "Users" (
+    UserID,
     Email, 
     First_Name, 
     Last_Name, 
@@ -34,34 +62,41 @@ INSERT INTO "Users" (
 )
 VALUES
 (
+    uuid_generate_v4(),  -- Automatically generate a UUID
     'parkflow113@gmail.com', 
     'Parkflow', 
     'Admin', 
     '+1', 
     '1234567890', 
-    '$2b$10$dc6rNGYRl4pyE3L49Eratuszs0Sc.fGZ.sv.TtgQVJ1vHbcIMl7lC',  -- Use the hashed password
-    'admin_verification_code',  -- Optional: You can generate a random verification code or leave it as is
-    TRUE,  -- Verified as true
-    NOW() + INTERVAL '1 hour',  -- Verification code expires in 1 hour
-    NOW(),  -- Created at the current time
-    TRUE,  -- Is Admin set to true
-    FALSE,  -- Not banned
-    'XYZ987654',  -- Dummy license number (replace if needed)
-    100.00  -- Starting balance
+    '$2b$10$dc6rNGYRl4pyE3L49Eratuszs0Sc.fGZ.sv.TtgQVJ1vHbcIMl7lC', 
+    'admin_verification_code',  
+    TRUE,  
+    NOW() + INTERVAL '1 hour',  
+    NOW(),  
+    TRUE,  
+    FALSE,  
+    'XYZ987654',  
+    100.00  
 ),
 (
-    'itsleihl@gmail.com',  -- Replace with the new user's email
-    'Leihl',                 -- First Name
-    'Zambrano',              -- Last Name
-    '+44',                   -- Country Code
-    '9876543210',           -- Phone Number
-    '$2b$12$cE26VdAa8d/LL2MY6oxgsOhTKyrkbeudYaJ4oQwAi0RhlUPy8G71K',  -- Use the bcrypt-hashed password
-    '123456',  -- A generated or static verification code
-    FALSE,                  -- Set to false initially (user not verified yet)
-    NOW() + INTERVAL '1 hour',  -- Verification code expires in 1 hour
-    NOW(),                  -- Account creation time
-    FALSE,                  -- Non-admin user
-    FALSE,                  -- User is not banned
-    'XYZ123456',            -- License Number (if needed)
-    50.00                   -- Initial balance
+    uuid_generate_v4(),  -- Automatically generate a UUID
+    'itsleihl@gmail.com',  
+    'Leihl',                 
+    'Zambrano',              
+    '+44',                   
+    '9876543210',           
+    '$2b$12$cE26VdAa8d/LL2MY6oxgsOhTKyrkbeudYaJ4oQwAi0RhlUPy8G71K',  
+    '123456',  
+    FALSE,                  
+    NOW() + INTERVAL '1 hour',  
+    NOW(),                  
+    FALSE,                  
+    FALSE,                  
+    'XYZ123456',            
+    50.00                   
 );
+
+-- Insert parking lot data
+INSERT INTO "ParkingLot" (LocationID, Location, Parking_Spaces, Occupied_Spaces, Rate)
+VALUES
+(1, 'UEA Main Car Park', 100, 0, 5.00);

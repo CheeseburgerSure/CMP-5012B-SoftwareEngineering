@@ -4,7 +4,11 @@ const bodyParser = require('body-parser');
 const app = express();
 const session = require('express-session');
 
-const port = process.env.PORT || 3000;
+// Load environment variables from the .env file
+require('dotenv').config();
+
+const port = process.env.PORT || 3000;  // Use the port from the .env file or default to 3000
+const sessionSecret = process.env.SESSION_SECRET;  // Use the session secret from the .env file
 
 // Routers
 const loginRouter = require('./routes/loginRouter');
@@ -24,7 +28,7 @@ app.use(express.json());
 
 // Session configuration
 app.use(session({
-  secret: 'your-secret-key',  // Replace with a strong secret in production
+  secret: sessionSecret,  // Use the session secret from .env
   resave: false,
   saveUninitialized: true,
   cookie: { maxAge: 1000 * 60 * 60 * 24 }
@@ -35,13 +39,12 @@ app.get('/', (req, res) => {
   res.render('index');
 });
 
-app.use('/', loginRouter)
+app.use('/', loginRouter);
 app.use('/', signUpRouter);
 app.use(logoutRouter);
 app.use('/', authRoutes);
 app.use('/dashboard', dashboardRouter);
 app.use('/details', detailsRouter);
-
 
 // Serve static files from the 'public' folder
 app.use(express.static(path.join(__dirname, 'public')));
