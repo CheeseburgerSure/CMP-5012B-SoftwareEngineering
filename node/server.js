@@ -34,12 +34,14 @@ app.use(session({
 app.get('/', (req, res) => {
   res.render('index');
 });
+
 app.use('/', loginRouter)
 app.use('/', signUpRouter);
 app.use(logoutRouter);
 app.use('/', authRoutes);
 app.use('/dashboard', dashboardRouter);
-app.use('/', detailsRouter);
+app.use('/details', detailsRouter);
+
 
 // Serve static files from the 'public' folder
 app.use(express.static(path.join(__dirname, 'public')));

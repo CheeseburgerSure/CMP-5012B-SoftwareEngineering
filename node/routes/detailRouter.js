@@ -12,4 +12,6 @@ router.get('/', (req, res) => {
   detailsController.getDetailsPage(req, res);
 });
 
+router.post('/change-details', detailsController.updateUserDetails);
+
 module.exports = router;

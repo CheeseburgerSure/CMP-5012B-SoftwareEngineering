@@ -22,26 +22,103 @@ html(lang="en")
         h1 Change Your Details
 
         .details-box
+          // Email
           .detail-row
             label Email:
-            span #{user.email}
-            a.btn-change(href="/change-details/email") Change
+            if user && user.email
+              span #{user.email}
+            else
+              span No email available
+            a.btn-change(href="javascript:void(0);", onclick="toggleField('email')") Change
+            
+            // Editable email form
+            .edit-field#email-field(style="display: none;")
+              input(type="email" id="new-email" value=user.email)
+              button(type="button" onclick="saveChanges('email')") Save
 
+          // First Name
           .detail-row
             label First Name:
-            span #{user.first_name}
-            a.btn-change(href="/change-details/first-name") Change
+            if user && user.first_name
+              span #{user.first_name}
+            else
+              span No first name available
+            a.btn-change(href="javascript:void(0);", onclick="toggleField('first-name')") Change
+            // Editable first name form
+            .edit-field#first-name-field(style="display: none;")
+              input(type="text" id="new-first-name" value=user.first_name)
+              button(type="button" onclick="saveChanges('first-name')") Save
 
+          // Last Name
           .detail-row
             label Last Name:
-            span #{user.last_name}
-            a.btn-change(href="/change-details/last-name") Change
+            if user && user.last_name
+              span #{user.last_name}
+            else
+              span No last name available
+            a.btn-change(href="javascript:void(0);", onclick="toggleField('last-name')") Change
+            // Editable last name form
+            .edit-field#last-name-field(style="display: none;")
+              input(type="text" id="new-last-name" value=user.last_name)
+              button(type="button" onclick="saveChanges('last-name')") Save
 
+          // Password
           .detail-row
             label Password:
             span ••••••••
-            a.btn-change(href="/change-details/password") Change
+            a.btn-change(href="javascript:void(0);", onclick="toggleField('password')") Change
+            // Editable password form
+            .edit-field#password-field(style="display: none;")
+              input(type="password" id="new-password" placeholder="Enter new password")
+              button(type="button" onclick="saveChanges('password')") Save
 
     // Footer
     footer
       p &copy; 2025 ParkFlow. All Rights Reserved.
+
+    script.
+      function toggleField(field) {
+        var fieldId = field + '-field';
+        var fieldElement = document.getElementById(fieldId);
+        var allFields = document.querySelectorAll('.edit-field');
+        for (var i = 0; i < allFields.length; i++) {
+          allFields[i].style.display = 'none';
+        }
+        fieldElement.style.display = 'block';
+      }
+
+      async function saveChanges(field) {
+        const input = document.getElementById('new-' + field);
+        const value = input.value;
+
+        const body = {};
+        if (field === 'first-name') {
+          body.first_name = value;
+        } else if (field === 'last-name') {
+          body.last_name = value;
+        } else if (field === 'password') {
+          body.password = value;
+        } else if (field === 'email') {
+          body.email = value;
+        }
+
+        try {
+          const response = await fetch('/details/change-details', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+          });
+
+          if (response.ok) {
+            alert('Successfully updated!');
+            location.reload(); // Reload to reflect changes
+          } else {
+            alert('Failed to update. Please try again.');
+          }
+        } catch (error) {
+          console.error('Error updating details:', error);
+          alert('An error occurred. Please try again later.');
+        }
+      }
