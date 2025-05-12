@@ -1,4 +1,4 @@
-doctype html
+DOCTYPE html
 html(lang="en")
   head
     meta(charset="UTF-8")
@@ -34,7 +34,8 @@ html(lang="en")
                 .col-md-9.col-lg-8.mx-auto
                   h3.login-heading.mb-4 Welcome back!
                   // Sign In Form
-                  form(action="user-access.pug" method="post")
+                  // Action and method is placeholder whilst the bug is dealt by Leihl
+                  form(action="user-access" method="get")                  
                     .form-floating.mb-3
                       input#username.form-control(type="text" name="username" placeholder="Enter your username" required)
                       label(for='username') Username
@@ -50,7 +51,7 @@ html(lang="en")
                         a.small(href='forgot-password.pug') Forgot password?
                       .text-center
                         .small Don't have an account? 
-                          a(href='signup.pug') Create one now!
+                          a(href='/create-account') Create one now!
 
     // Footer
     footer.py-5.bg-nav

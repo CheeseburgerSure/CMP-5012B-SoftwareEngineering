@@ -317,6 +317,9 @@
     max-height:500px;
     width: auto;    
   }
+
+  /* Create Account Page */
+
   
   /* Media Queries for Mobile */
   @media (max-width: 768px) {

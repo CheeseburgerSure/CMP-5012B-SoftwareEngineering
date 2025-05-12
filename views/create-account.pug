@@ -5,19 +5,74 @@ html(lang="en")
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
     title Create Account | ParkFlow
     link(rel="stylesheet" href="styles.css")
+    link(rel="stylesheet" href="bootstrap.css")
     script(src="/public/js/script.js")
 
   body
-    // Navbar
-    nav.navbar
-      .logo ParkFlow
-      .menu-icon(onclick="toggleMenu()") &#9776;
-      ul.nav-links
-        li: a(href="/") Home
-        li: a(href="/login") Login
-        li: a(href="/create-account") Create Account
+    // Navigation
+    nav.navbar.navbar-expand-lg.navbar-dark.bg-nav 
+      .container.px-5 
+        img.img-thumbnail.m-sm-3.w-5(src="logo.png" alt="Park Flow Logo")
+        a.navbar-brand(href="/index") Parkflow
+        button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
+          span.navbar-toggler-icon
+        .collapse.navbar-collapse#navbarSupportedContent 
+          ul.navbar-nav.ms-auto.mb-2.mb-lg-0 
+            li.nav-item: a.nav-link(href="/index") Home
+            li.nav-item: a.nav-link(href="/login") Login
+            li.nav-item: a.nav-link.active(aria-current="page" href="/create-account") Create Account
     
     // Create Account Content
+
+    .container-fluid.ps-md-0.py-xxl-6
+      .row.g-0
+        .d-none.d-md-flex.col-md-4.col-lg-6.bg-image.justify-content-center
+          img.loginImg(src="logo.png")
+        .col-md-8.col-lg-6
+          .login.d-flex.align-items-center.py-5
+            .container
+              .row
+                .col-md-9.col-lg-8.mx-auto
+                  h3.login-heading.mb-4 Create Account
+                  form(id="create-account-form" action="/createAccountForm" method="POST")                  
+                    .form-floating.mb-3
+                      input#firstName.form-control(type="text" name="firstName" placeholder="Enter your first name" required)
+                      label(for='firstName') First Name
+                    .form-floating.mb-3
+                      input#lastName.form-control(type="text" name="lastName" placeholder="Enter your last name" required)
+                      label(for="lastName") Last Name
+                    .form-floating.mb-3
+                      label(for="phoneNumber") Phone Number    
+                      .phone-input-container
+                        select#countryCode(name="countryCode" required)
+                          option(value="+44" data-flag="gb" selected) +44 (UK)
+                          option(value="+1" data-flag="us") +1 (USA)
+                          option(value="+61" data-flag="au") +61 (Australia)
+                        input#phoneNumber(type="tel" name="phoneNumber" required placeholder="e.g., 123-456-7890")                  
+                    .form-floating.mb-3
+                      input#email.form-control(type="email" name="email" required)
+                      label(for="email") Email
+                    .form-floating.mb-3
+                      input#confirmEmail.form-control(type="email" name="confirmEmail" required)
+                      label(for="confirmEmail") Confirm Email
+                    .form-floating.mb-3
+                      input#password.form-control(type="password" name="password" required)
+                      label(for="password") Password
+                    .form-floating.mb-3
+                      input#confirmPassword.form-control(type="password" name="confirmPassword" required)
+                      label(for="confirmPassword") Verify Password 
+                    .checkbox-container
+                      input#tos.form-check-input(type="checkbox" name="tos" required)
+                      label.ps-sm-2(for="tos") I accept the Terms and Conditions
+
+                    .d-grid
+                      button.btn.btn-lg.btn-primary.btn-login.text-uppercase.fw-bold.mb-2(type='submit') CREATE ACCOUNT
+                      .text-center
+                        a.small(href='forgot-password.pug') Forgot password?
+                      .text-center
+                        .small Don't have an account? 
+                          a(href='/create-account') Create one now!
+    
     .content
       .form-container
         h1 Create Account
@@ -63,5 +118,6 @@ html(lang="en")
           a(href="signin.html") Sign in now!
     
     // Footer
-    footer
-      p &copy; 2025 ParkFlow. All Rights Reserved.
+    footer.py-5.bg-nav
+      .container.pix-5 
+        p.m-0.text-center.text-white Copyright &copy; 2025 ParkFlow. All Rights Reserved.
