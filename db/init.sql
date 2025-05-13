@@ -51,6 +51,12 @@ CREATE TABLE IF NOT EXISTS "Transactions" (
     FOREIGN KEY (UserID) REFERENCES "Users" (UserID)
 );
 
+-- User Attempts -- using email and then grabbing the userid
+CREATE TABLE "PasswordResetAttempts" (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 -- Insert users
 INSERT INTO "Users" (
