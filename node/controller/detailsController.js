@@ -50,10 +50,10 @@ const updateUserDetails = async (req, res) => {
     }
     if (password) {
       const hash = await bcrypt.hash(password, 10);
-      setParts.push(`"Password_Hash" = $${idx++}`);
+      setParts.push(`"password_hash" = $${idx++}`);
       setValues.push(hash);
     }
-    if (email) {                                        // if you let users change email
+    if (email) {
       setParts.push(`Email = $${idx++}`);
       setValues.push(email);
       req.session.user.email = email;
