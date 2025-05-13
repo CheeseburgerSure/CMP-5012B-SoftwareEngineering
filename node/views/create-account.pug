@@ -1,90 +1,114 @@
+doctype html
 html(lang="en")
   head
     meta(charset="UTF-8")
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
     title Create Account | ParkFlow
     link(rel="stylesheet" href="styles.css")
+    link(rel="stylesheet" href="bootstrap.css")
+    script(src="/public/js/script.js")
 
   body
-    // Navbar
-    nav.navbar
-      .logo ParkFlow
-      .menu-icon(onclick="toggleMenu()") &#9776;
-      ul.nav-links
-        li: a(href="/") Home
-        li: a(href="/login") Login
-        li: a(href="/create-account") Create Account
-
+    // Navigation
+    nav.navbar.navbar-expand-lg.navbar-dark.bg-nav 
+      .container.px-5 
+        img.img-thumbnail.m-sm-3.w-5(src="logo.png" alt="Park Flow Logo")
+        a.navbar-brand(href="/") Parkflow
+        button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
+          span.navbar-toggler-icon
+        .collapse.navbar-collapse#navbarSupportedContent 
+          ul.navbar-nav.ms-auto.mb-2.mb-lg-0 
+            li.nav-item: a.nav-link(href="/index") Home
+            li.nav-item: a.nav-link(href="/login") Login
+            li.nav-item: a.nav-link.active(aria-current="page" href="/create-account") Create Account
+    
     // Create Account Content
-    .content
-      .form-container
-        h1 Create Account
 
-        // General error
-        if error && error.general
-          p.error #{error.general}
+    .container-fluid.ps-md-0.py-xxl-6
+      .row.g-0
+        .d-none.d-md-flex.col-md-4.col-lg-6.bg-image.justify-content-center
+          img.loginImg(src="logo.png")
+        .col-md-8.col-lg-6
+          .login.d-flex.align-items-center.py-5
+            .container
+              .row
+                .col-md-9.col-lg-8.mx-auto
+                  h3.login-heading.mb-4 Create Account
 
-        form(id="create-account-form" action="/createAccountForm" method="POST")
+                  // General error
+                  if error && error.general
+                    p.error #{error.general}
 
-          // First and Last Name Fields
-          label(for="firstName") First Name
-          input(type="text" id="firstName" name="firstName" required value=firstName || '')
-          if error && error.firstName
-            p.error #{error.firstName}
-          
-          label(for="lastName") Last Name
-          input(type="text" id="lastName" name="lastName" required value=lastName || '')
-          if error && error.lastName
-            p.error #{error.lastName}
-          
-          // Phone Number Field with Country Code Dropdown
-          label(for="phoneNumber") Phone Number
-          .phone-input-container
-            select(id="countryCode" name="countryCode" required)
-              option(value="+44" data-flag="gb" selected=countryCode === '+44') +44 (UK)
-              option(value="+1" data-flag="us" selected=countryCode === '+1') +1 (USA)
-              option(value="+61" data-flag="au" selected=countryCode === '+61') +61 (Australia)
-            input(type="tel" id="phoneNumber" name="phoneNumber" required placeholder="e.g., 123-456-7890" value=phoneNumber || '')
-          if error && error.phoneNumber
-            p.error #{error.phoneNumber}
-          
-          // Email Fields
-          label(for="email") Email
-          input(type="email" id="email" name="email" required value=email || '')
-          if error && error.email
-            p.error #{error.email}
-          
-          label(for="confirmEmail") Confirm Email
-          input(type="email" id="confirmEmail" name="confirmEmail" required value=confirmEmail || '')
-          if error && error.confirmEmail
-            p.error #{error.confirmEmail}
-          
-          // Password Fields
-          label(for="password") Password
-          input(type="password" id="password" name="password" required value=password || '')
-          if error && error.password
-            p.error #{error.password}
-          
-          label(for="confirmPassword") Verify Password
-          input(type="password" id="confirmPassword" name="confirmPassword" required value=confirmPassword || '')
-          if error && error.confirmPassword
-            p.error #{error.confirmPassword}
-          
-          // Terms and Conditions
-          .checkbox-container
-            input(type="checkbox" id="tos" name="tos" required)
-            label(for="tos") I accept the Terms and Conditions
-          if error && error.tos
-            p.error #{error.tos}
-          
-          input(type="submit" value="CREATE ACCOUNT")
-        
-        p.signup-link Already have an account? 
-          a(href="/login") Sign in now!
+                  form(id="create-account-form" action="/createAccountForm" method="POST")                  
+                    
+                    // First and Last Name Fields
+                    .form-floating.mb-3
+                      input#firstName.form-control(type="text" name="firstName" placeholder="Enter your first name" required value=firstName || '')
+                      if error && error.firstName
+                        p.error #{error.firstName}
+                      label(for='firstName') First Name
+
+                    .form-floating.mb-3
+                      input#lastName.form-control(type="text" name="lastName" placeholder="Enter your last name" required value=lastName || '')
+                      if error && error.lastName
+                        p.error #{error.lastName}
+                      label(for="lastName") Last Name
+
+                    // Phone Number Field with Country Code Dropdown
+                    .form-floating.mb-3
+                      p: label(for="phoneNumber") Phone Number    
+                      .phone-input-container
+                        select#countryCode(name="countryCode" required)
+                          option(value="+44" selected) +44 (UK)
+                          option(value="+1") +1 (USA)
+                          option(value="+61") +61 (Australia)
+
+                        input#phoneNumber(type="tel" name="phoneNumber" required placeholder="e.g., 123-456-7890")                  
+                        if error && error.phoneNumber
+                          p.error #{error.phoneNumber}
+
+                    // Email Fields
+                    .form-floating.mb-3
+                      input#email.form-control(type="email" name="email" required value=email || '')
+                      if error && error.email
+                        p.error #{error.email}
+                      label(for="email") Email
+
+                    .form-floating.mb-3
+                      input#confirmEmail.form-control(type="email" name="confirmEmail" required value=confirmEmail || '')
+                      if error && error.confirmEmail
+                        p.error #{error.confirmEmail}
+                      label(for="confirmEmail") Confirm Email
+
+                    // Password Fields
+                    .form-floating.mb-3
+                      input#password.form-control(type="password" name="password" required value=password || '')
+                      if error && error.password
+                        p.error #{error.password}
+                      label(for="password") Password
+
+                    .form-floating.mb-3
+                      input#confirmPassword.form-control(type="password" name="confirmPassword" required value=confirmPassword || '')
+                      if error && error.confirmPassword
+                        p.error #{error.confirmPassword}
+                      label(for="confirmPassword") Verify Password 
+
+                    // Terms and Conditions
+                    .checkbox-container
+                      input#tos.form-check-input(type="checkbox" name="tos" required)
+                      if error && error.tos
+                        p.error #{error.tos}
+                      label.ps-sm-2(for="tos") I accept the Terms and Conditions
+                    .d-grid
+                      button.btn.btn-lg.btn-primary.btn-login.text-uppercase.fw-bold.mb-2(type='submit') CREATE ACCOUNT
+                      .text-center
+                        .small Already have an account? 
+                          a(href='/login') Sign in now!
     
     // Footer
-    footer
-      p &copy; 2025 ParkFlow. All Rights Reserved.
+    footer.py-5.bg-nav
+      .container.pix-5 
+        p.m-0.text-center.text-white Copyright &copy; 2025 ParkFlow. All Rights Reserved.
 
   script.
     document.addEventListener("DOMContentLoaded", () => {
