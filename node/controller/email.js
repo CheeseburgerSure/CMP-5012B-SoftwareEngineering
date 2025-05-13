@@ -65,29 +65,37 @@ async function sendVerificationEmail(to, code, firstName) {
 }
 
 async function sendForgotPassword(to, code, firstName) {
-  const subject = 'Reset Your ParkFlow Account';
+  const subject = 'Reset Your ParkFlow Password';
 
-  // Generate a token with the email, verification code, and expiry
+  // Generate a token with the email and code, valid for 10 minutes
   const token = jwt.sign(
-    { email: to, code: code },  // Data to encode in the token
-    'your-secret-key',          // Secret key to sign the token
-    { expiresIn: '10m' }        // Expiry time of 10 minutes
+    { email: to, code: code },
+    'your-secret-key',
+    { expiresIn: '10m' }
   );
 
-  const forgotLink = `http://localhost:3000/verify?token=${token}`;
+  const forgotLink = `http://localhost:3000/reset-password?token=${token}`;
 
   const text = `
-  Hi ${firstName},
+Hi ${firstName},
 
-  Thank you for asking help with ParkFlow!
+We received a request to reset your password for your ParkFlow account.
 
-  To reset your password, please use the following 6-digit verification code:
+🔐 Your password reset code: ${code}
 
-  Best regards,  
-  - The ParkFlow Team
+You can also reset your password using the following link:
+
+➡️ Reset your password: ${forgotLink}
+
+This code and link will expire in 10 minutes. If you did not request a password reset, please ignore this email or contact support.
+
+Best regards,  
+– The ParkFlow Team
   `;
+
   await sendEmail(to, subject, text);
 }
 
+
 // Export the functions
-module.exports = { sendEmail, sendVerificationEmail };
+module.exports = { sendEmail, sendVerificationEmail, sendForgotPassword};
