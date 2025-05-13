@@ -5,51 +5,32 @@ html(lang="en")
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
     title User Dashboard | ParkFlow
     link(rel="stylesheet" href="styles.css")
-    // Add Font Awesome
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css")
 
   body
     // Navbar
     nav.navbar
       .logo ParkFlow
+      .nav-items 
+        ul.nav-links
+          li: a(href="/dashboard") Dashboard
+          li: a(href="/logout") Logout
       .menu-icon(onclick="toggleMenu()") &#9776;
-      ul.nav-links
-        li: a(href="/dashboard") Dashboard
-        li: a(href="/logout") Logout
 
     // User Dashboard Content
     .content
       .form-container
-        h1 Welcome to Your Dashboard, #{first_name}!
+        h1 Admin Panel
+
+        .current-users-count
+          span Current Users: #{userCount || 0} 
 
         // Available Balance and Ongoing Sessions
         section#dashboard-stats
-          .stat-box
-            h3 Available Balance
-            p £#{balance}
-          .stat-box
-            h3 Ongoing Sessions
-            p: a(href="/session-details") #{sessions} Active  // Replace with dynamic session count
-
-        // Links to other pages with icons
-        section#dashboard-links
-          a(href="/details")
-            i.fas.fa-user-edit
-            div Change Your Details
-          a(href="/add-car")
-            i.fas.fa-car
-            div Add Your Car
-          a(href="/pay-parking")
-            i.fas.fa-credit-card
-            div Pay for Parking
-          a(href="/logout")
-            i.fas.fa-sign-out-alt
-            div Logout
-
-    // Floating Chat Box Icon
-    .chat-box
-      a(href="/chat")
-        i.fas.fa-comment-dots
+          a.stat-box(href="/admin/users")
+            h3 USERS
+          a.stat-box(href="/admin/bookings")
+            h3 BOOKINGS
 
     // Footer
     footer

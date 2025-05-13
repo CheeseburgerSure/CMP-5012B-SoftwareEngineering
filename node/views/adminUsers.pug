@@ -1,0 +1,49 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Admin Users | ParkFlow
+    link(rel="stylesheet" href="/styles.css")
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css")
+
+  body
+    // Navbar
+    nav.navbar
+      .logo ParkFlow
+      .nav-items 
+        ul.nav-links
+          li: a(href="/dashboard") Dashboard
+          li: a(href="/admin/bookings") Bookings
+          li: a(href="/logout") Logout
+      .menu-icon(onclick="toggleMenu()") &#9776;
+
+    // Page Content
+    .content
+      h1 Admin - Users
+
+      .table-container
+        table.user-table
+          thead
+            tr
+              th ID
+              th Name
+              th Email
+              th Role
+              th Status
+              th Actions
+          tbody
+            //- Data rows will be inserted here dynamically using a loop
+            //- Example loop for future:
+            // each user in users
+            //   tr
+            //     td= user.id
+            //     td= user.name
+            //     td= user.email
+            //     td= user.role
+            //     td= user.status
+            //     td: a(href=`/admin/users/${user.id}`) View
+
+    // Footer
+    footer
+      p &copy; 2025 ParkFlow. All Rights Reserved.

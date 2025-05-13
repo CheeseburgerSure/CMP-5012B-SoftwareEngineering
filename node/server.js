@@ -18,7 +18,7 @@ const authRoutes = require('./routes/authRouter');
 const dashboardRouter = require('./routes/dashboardRouter');
 const detailsRouter = require('./routes/detailRouter');
 const balanceRouter = require('./routes/balanceRouter');
-
+const adminRouter = require('./routes/adminRouter');
 // Set views and view engine
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
@@ -47,6 +47,7 @@ app.use('/', authRoutes);
 app.use('/dashboard', dashboardRouter);
 app.use('/details', detailsRouter);
 app.use('/', balanceRouter);
+app.use('/', adminRouter);
 
 // Serve static files from the 'public' folder
 app.use(express.static(path.join(__dirname, 'public')));
