@@ -4,30 +4,7 @@ const bcrypt = require('bcrypt');
 const pool = require('../db');
 const jwt = require('jsonwebtoken');
 const { sendVerificationEmail } = require('./email');
-//const { validatePassword } = require('../utils/validators.js');
-
-// Helper: Validate password strength
-function validatePassword(password) {
-  const errors = [];
-
-  if (password.length < 8 || password.length > 16) {
-    errors.push('Password must be between 8 and 16 characters.');
-  }
-  if (!/[A-Z]/.test(password)) {
-    errors.push('Password must include at least one uppercase letter.');
-  }
-  if (!/[a-z]/.test(password)) {
-    errors.push('Password must include at least one lowercase letter.');
-  }
-  if (!/[0-9]/.test(password)) {
-    errors.push('Password must include at least one number.');
-  }
-  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-    errors.push('Password must include at least one special character.');
-  }
-
-  return errors;
-}
+const { validatePassword } = require('../utils/validators.js');
 
 // Helper: Render error form
 function renderWithError(res, error, data) {

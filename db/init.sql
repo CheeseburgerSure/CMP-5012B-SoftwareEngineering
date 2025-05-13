@@ -42,6 +42,16 @@ CREATE TABLE IF NOT EXISTS "ParkingLot" (
     Rate DECIMAL(10, 2)
 );
 
+-- Transactions Table
+CREATE TABLE IF NOT EXISTS "Transactions" (
+    TransactionID SERIAL PRIMARY KEY,
+    UserID UUID,
+    Amount DECIMAL(10, 2),
+    TransactionTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (UserID) REFERENCES "Users" (UserID)
+);
+
+
 -- Insert users
 INSERT INTO "Users" (
     UserID,
