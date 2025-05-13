@@ -22,6 +22,14 @@ html(lang="en")
         h1 Change Your Details
 
         .details-box
+          // User ID
+          .detail-row
+            label User ID:
+            if user && user.id
+              span #{user.id}
+            else
+              span No ID available
+
           // Email
           .detail-row
             label Email:
@@ -33,7 +41,7 @@ html(lang="en")
             
             // Editable email form
             .edit-field#email-field(style="display: none;")
-              input(type="email" id="new-email" value=user.email)
+              input(type="email" id="new-email" value=(user && user.email) ? user.email : '')
               button(type="button" onclick="saveChanges('email')") Save
 
           // First Name
@@ -44,9 +52,8 @@ html(lang="en")
             else
               span No first name available
             a.btn-change(href="javascript:void(0);", onclick="toggleField('first-name')") Change
-            // Editable first name form
             .edit-field#first-name-field(style="display: none;")
-              input(type="text" id="new-first-name" value=user.first_name)
+              input(type="text" id="new-first-name" value=(user && user.first_name) ? user.first_name : '')
               button(type="button" onclick="saveChanges('first-name')") Save
 
           // Last Name
@@ -57,9 +64,8 @@ html(lang="en")
             else
               span No last name available
             a.btn-change(href="javascript:void(0);", onclick="toggleField('last-name')") Change
-            // Editable last name form
             .edit-field#last-name-field(style="display: none;")
-              input(type="text" id="new-last-name" value=user.last_name)
+              input(type="text" id="new-last-name" value=(user && user.last_name) ? user.last_name : '')
               button(type="button" onclick="saveChanges('last-name')") Save
 
           // Password
@@ -67,9 +73,10 @@ html(lang="en")
             label Password:
             span ••••••••
             a.btn-change(href="javascript:void(0);", onclick="toggleField('password')") Change
-            // Editable password form
             .edit-field#password-field(style="display: none;")
+              input(type="password" id="current-password" placeholder="Enter current password")
               input(type="password" id="new-password" placeholder="Enter new password")
+              input(type="password" id="confirm-password" placeholder="Confirm new password")
               button(type="button" onclick="saveChanges('password')") Save
 
     // Footer
@@ -78,28 +85,39 @@ html(lang="en")
 
     script.
       function toggleField(field) {
-        var fieldId = field + '-field';
-        var fieldElement = document.getElementById(fieldId);
-        var allFields = document.querySelectorAll('.edit-field');
-        for (var i = 0; i < allFields.length; i++) {
-          allFields[i].style.display = 'none';
-        }
+        const fieldId = field + '-field';
+        const fieldElement = document.getElementById(fieldId);
+        const allFields = document.querySelectorAll('.edit-field');
+        allFields.forEach(f => f.style.display = 'none');
         fieldElement.style.display = 'block';
       }
 
       async function saveChanges(field) {
-        const input = document.getElementById('new-' + field);
-        const value = input.value;
-
         const body = {};
+
         if (field === 'first-name') {
-          body.first_name = value;
+          body.first_name = document.getElementById('new-first-name').value;
         } else if (field === 'last-name') {
-          body.last_name = value;
-        } else if (field === 'password') {
-          body.password = value;
+          body.last_name = document.getElementById('new-last-name').value;
         } else if (field === 'email') {
-          body.email = value;
+          body.email = document.getElementById('new-email').value;
+        } else if (field === 'password') {
+          const current = document.getElementById('current-password').value;
+          const newPass = document.getElementById('new-password').value;
+          const confirm = document.getElementById('confirm-password').value;
+
+          if (!current || !newPass || !confirm) {
+            alert('Please fill out all password fields.');
+            return;
+          }
+
+          if (newPass !== confirm) {
+            alert('New password and confirmation do not match.');
+            return;
+          }
+
+          body.current_password = current;
+          body.new_password = newPass;
         }
 
         try {
@@ -111,11 +129,12 @@ html(lang="en")
             body: JSON.stringify(body)
           });
 
+          const result = await response.json();
           if (response.ok) {
             alert('Successfully updated!');
-            location.reload(); // Reload to reflect changes
+            location.reload();
           } else {
-            alert('Failed to update. Please try again.');
+            alert(result.error || 'Failed to update. Please try again.');
           }
         } catch (error) {
           console.error('Error updating details:', error);

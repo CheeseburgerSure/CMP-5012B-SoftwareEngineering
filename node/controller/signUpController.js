@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const pool = require('../db');
 const jwt = require('jsonwebtoken');
 const { sendVerificationEmail } = require('./email');
+//const { validatePassword } = require('../utils/validators.js');
 
 // Helper: Validate password strength
 function validatePassword(password) {
