@@ -139,4 +139,6 @@ VALUES
 -- Insert parking lot data
 INSERT INTO "parking_lots" (location_id, location, parking_spaces, occupied_spaces, rate)
 VALUES
-(1, 'UEA Main Car Park', 100, 0, 5.00);
+(1, 'UEA Main Car Park', 100, 0, 5.00),
+(2, 'UEA Sports Park Car Park', 40, 0, 3.00);
+
