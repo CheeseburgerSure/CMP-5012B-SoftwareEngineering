@@ -41,7 +41,7 @@ const postVerify = async (req, res) => {
 
   try {
     const result = await pool.query(
-      'SELECT verification_code, Code_Expires_At FROM "Users" WHERE Email = $1',
+      'SELECT verification_code, code_expires_at FROM "users" WHERE email = $1',
       [email]
     );
 
@@ -62,7 +62,7 @@ const postVerify = async (req, res) => {
 
     // Update user as verified
     await pool.query(
-      'UPDATE "Users" SET Verified = true, verification_code = null, Code_Expires_At = null WHERE Email = $1',
+      'UPDATE "users" SET verified = true, verification_code = null, code_expires_at = null WHERE email = $1',
       [email]
     );
 

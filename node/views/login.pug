@@ -34,8 +34,9 @@ html(lang="en")
                   h3.login-heading.mb-4 Welcome back!
 
                   // Success Message
-                  if successMessage
-                  .alert-success= successMessage
+                  if success
+                    .alert.alert-success(role="alert") #{success}
+
 
                   // Login Form
                   form(id="login-form" method="POST", action="/login")

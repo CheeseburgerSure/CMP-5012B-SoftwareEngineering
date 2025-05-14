@@ -64,5 +64,26 @@ async function sendVerificationEmail(to, code, firstName) {
   await sendEmail(to, subject, text);
 }
 
+async function sendForgotPassword(to, resetLink, firstName) {
+  const subject = 'Reset Your ParkFlow Password';
+
+  const text = `
+Hi ${firstName},
+
+We received a request to reset your password for your ParkFlow account.
+
+You can reset your password securely using the link below:
+
+➡️ Reset your password: ${resetLink}
+
+This link will expire in 1 hour. If you did not request a password reset, please ignore this email or contact support.
+
+Best regards,  
+– The ParkFlow Team
+  `;
+
+  await sendEmail(to, subject, text);
+}
+
 // Export the functions
-module.exports = { sendEmail, sendVerificationEmail };
+module.exports = { sendEmail, sendVerificationEmail, sendForgotPassword};

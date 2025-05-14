@@ -7,7 +7,7 @@ const getDashboardData = async (req, res) => {
 
       const { email } = req.session.user;
       const { rows } = await pool.query(
-        'SELECT First_Name, Last_Name, Balance FROM "Users" WHERE Email = $1',
+        'SELECT first_name, last_name, balance FROM "users" WHERE email = $1',
         [email]
       );
 

@@ -2,6 +2,9 @@ const pool = require('../db');
 
 const postAddBalance = async (req, res) => {
   try {
+
+    if (!req.session.user?.email) return res.redirect('/login');
+
     const { email } = req.session.user;
     const amount = parseFloat(req.body.amount);
 
@@ -11,7 +14,7 @@ const postAddBalance = async (req, res) => {
 
     // Fetch the user's ID
     const userResult = await pool.query(
-      'SELECT UserID FROM "Users" WHERE Email = $1',
+      'SELECT user_id FROM "users" WHERE email = $1',
       [email]
     );
 
@@ -19,17 +22,17 @@ const postAddBalance = async (req, res) => {
       return res.status(404).send('User not found.');
     }
 
-    const userId = userResult.rows[0].userid;
+    const userId = userResult.rows[0].user_id;
 
     // Update balance
     await pool.query(
-      'UPDATE "Users" SET Balance = Balance + $1 WHERE UserID = $2',
+      'UPDATE "users" SET balance = balance + $1 WHERE user_id = $2',
       [amount, userId]
     );
 
     // Insert transaction with timestamp
     await pool.query(
-      'INSERT INTO "Transactions" (UserID, Amount) VALUES ($1, $2)',
+      'INSERT INTO "transactions" (user_id, amount) VALUES ($1, $2)',
       [userId, amount]
     );
 
