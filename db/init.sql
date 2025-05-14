@@ -2,79 +2,89 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Users Table
-CREATE TABLE IF NOT EXISTS "Users" (
-    UserID UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    Email VARCHAR(100),
-    First_Name VARCHAR(100),
-    Last_Name VARCHAR(100),
-    Country_Code VARCHAR(10),
-    Phone_Number VARCHAR(20),
-    Password_Hash VARCHAR(255),
-    Verification_Code VARCHAR(100),
-    Verified BOOLEAN DEFAULT FALSE,
-    Code_Expires_At TIMESTAMP,
-    Created_At TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    Is_Admin BOOLEAN DEFAULT FALSE,
-    Is_Banned BOOLEAN DEFAULT FALSE,
-    License_Number VARCHAR(100),
-    Balance DECIMAL(10, 2) DEFAULT 0.00
+CREATE TABLE IF NOT EXISTS "users" (
+    user_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    email VARCHAR(100) UNIQUE NOT NULL,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    country_code VARCHAR(10),
+    phone_number VARCHAR(20),
+    password_hash VARCHAR(255),
+    verification_code VARCHAR(100),
+    verified BOOLEAN DEFAULT FALSE,
+    code_expires_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_admin BOOLEAN DEFAULT FALSE,
+    is_banned BOOLEAN DEFAULT FALSE,
+    license_number VARCHAR(100),
+    balance DECIMAL(10, 2) DEFAULT 0.00
 );
 
 -- Booking Table
-CREATE TABLE IF NOT EXISTS "Booking" (
-    BookingID SERIAL PRIMARY KEY,
-    UserID UUID,
-    Location VARCHAR(255),
-    Time_Booked_for TIME,
-    Duration INTERVAL,
-    Booking_Date DATE,
-    Price DECIMAL(10, 2),
-    Booking_Paid BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (UserID) REFERENCES "Users" (UserID)
+CREATE TABLE IF NOT EXISTS "bookings" (
+    booking_id SERIAL PRIMARY KEY,
+    user_id UUID,
+    location VARCHAR(255),
+    time_booked_for TIME,
+    duration INTERVAL,
+    booking_date DATE,
+    price DECIMAL(10, 2),
+    booking_paid BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (user_id) REFERENCES "users" (user_id)
 );
 
--- Parking Location
-CREATE TABLE IF NOT EXISTS "ParkingLot" (
-    LocationID SERIAL PRIMARY KEY,
-    Location VARCHAR(100),
-    Parking_Spaces INTEGER,
-    Occupied_Spaces INTEGER,
-    Rate DECIMAL(10, 2)
+-- Parking Location Table
+CREATE TABLE IF NOT EXISTS "parking_lots" (
+    location_id SERIAL PRIMARY KEY,
+    location VARCHAR(100),
+    parking_spaces INTEGER,
+    occupied_spaces INTEGER,
+    rate DECIMAL(10, 2)
 );
 
 -- Transactions Table
-CREATE TABLE IF NOT EXISTS "Transactions" (
-    TransactionID SERIAL PRIMARY KEY,
-    UserID UUID,
-    Amount DECIMAL(10, 2),
-    TransactionTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (UserID) REFERENCES "Users" (UserID)
+CREATE TABLE IF NOT EXISTS "transactions" (
+    transaction_id SERIAL PRIMARY KEY,
+    user_id UUID,
+    amount DECIMAL(10, 2),
+    transaction_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES "users" (user_id)
 );
 
--- User Attempts -- using email and then grabbing the userid
-CREATE TABLE "PasswordResetAttempts" (
+-- Password Reset Attempts Table
+CREATE TABLE IF NOT EXISTS "password_reset_attempts" (
     id SERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Email Verification Tokens Table
+CREATE TABLE IF NOT EXISTS "email_verification_tokens" (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Insert users
-INSERT INTO "Users" (
-    UserID,
-    Email, 
-    First_Name, 
-    Last_Name, 
-    Country_Code, 
-    Phone_Number, 
-    Password_Hash, 
-    Verification_Code, 
-    Verified, 
-    Code_Expires_At, 
-    Created_At, 
-    Is_Admin, 
-    Is_Banned, 
-    License_Number, 
-    Balance
+INSERT INTO "users" (
+    user_id,
+    email, 
+    first_name, 
+    last_name, 
+    country_code, 
+    phone_number, 
+    password_hash, 
+    verification_code, 
+    verified, 
+    code_expires_at, 
+    created_at, 
+    is_admin, 
+    is_banned, 
+    license_number, 
+    balance
 )
 VALUES
 (
@@ -113,6 +123,6 @@ VALUES
 );
 
 -- Insert parking lot data
-INSERT INTO "ParkingLot" (LocationID, Location, Parking_Spaces, Occupied_Spaces, Rate)
+INSERT INTO "parking_lots" (location_id, location, parking_spaces, occupied_spaces, rate)
 VALUES
 (1, 'UEA Main Car Park', 100, 0, 5.00);

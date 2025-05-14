@@ -13,7 +13,7 @@ const postLogin = async (req, res) => {
 
   try {
     // Query user by email
-    const result = await pool.query('SELECT * FROM "Users" WHERE "email" = $1', [email]);
+    const result = await pool.query('SELECT * FROM "users" WHERE "email" = $1', [email]);
 
     if (result.rows.length === 0) {
       return res.render('login', { error: 'Invalid email or password.' });
@@ -40,7 +40,7 @@ const postLogin = async (req, res) => {
     }
     // Store user session
     req.session.user = {
-      id: user.id,
+      id: user.user_id,
       email: user.email,
       name: user.name // Add other fields if needed
     };

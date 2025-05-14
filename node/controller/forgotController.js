@@ -6,7 +6,7 @@ const postForgot = async (req, res) => {
 
   try {
     // Check if the email exists in the database
-    const { rows } = await pool.query('SELECT * FROM "Users" WHERE Email = $1', [email]);
+    const { rows } = await pool.query('SELECT * FROM "users" WHERE email = $1', [email]);
 
     if (rows.length === 0) {
       return res.status(400).render('forgot-password', {
@@ -20,14 +20,14 @@ const postForgot = async (req, res) => {
     const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
     
     const { rows: attempts } = await pool.query(
-      'SELECT * FROM "PasswordResetAttempts" WHERE Email = $1 AND Timestamp > $2',
+      'SELECT * FROM "password_reset_attempts" WHERE email = $1 AND timestamp > $2',
       [email, twentyFourHoursAgo]
     );
 
     if (attempts.length >= 3) {
       // Ban the user for 24 hours
       await pool.query(
-        'UPDATE "Users" SET IsBanned = true WHERE Email = $1',
+        'UPDATE "user" SET is_banned = true WHERE email = $1',
         [email]
       );
 
@@ -39,7 +39,7 @@ const postForgot = async (req, res) => {
     // Check if the user has made a request in the last 5 minutes
     const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
     const recentAttempts = await pool.query(
-      'SELECT * FROM "PasswordResetAttempts" WHERE Email = $1 AND Timestamp > $2',
+      'SELECT * FROM "password_reset_attempts" WHERE email = $1 AND timestamp > $2',
       [email, fiveMinutesAgo]
     );
 
@@ -58,7 +58,7 @@ const postForgot = async (req, res) => {
 
     // Log the reset attempt
     await pool.query(
-      'INSERT INTO "PasswordResetAttempts" (Email, Timestamp) VALUES ($1, $2)',
+      'INSERT INTO "password_reset_attempts" (email, timestamp) VALUES ($1, $2)',
       [email, now]
     );
 

@@ -9,13 +9,13 @@ const getDetailsPage = async (req, res) => {
 
     const { email } = req.session.user;
     const { rows } = await pool.query(
-      'SELECT UserID, First_Name, Last_Name FROM "Users" WHERE Email = $1',
+      'SELECT user_id, first_name, last_name FROM "users" WHERE email = $1',
       [email]
     );
     if (!rows.length) return res.redirect('/login');
 
     const user = rows[0];
-    const shortenedUserID = user.userid.slice(0, 8);
+    const shortenedUserID = user.user_id.slice(0, 8);
 
     res.render('details', {
       user: {
@@ -50,7 +50,7 @@ const updateUserDetails = async (req, res) => {
     const { first_name, last_name, current_password, new_password, email } = req.body;
 
     const { rows } = await pool.query(
-      'SELECT UserID, First_Name, Last_Name FROM "Users" WHERE Email = $1',
+      'SELECT user_id, first_name, last_name FROM "users" WHERE email = $1',
       [sessionEmail]
     );
     if (!rows.length) return res.redirect('/login');
@@ -63,19 +63,19 @@ const updateUserDetails = async (req, res) => {
     let idx = 1;
 
     if (first_name) {
-      setParts.push(`First_Name = $${idx++}`);
+      setParts.push(`first_name = $${idx++}`);
       setValues.push(first_name);
       req.session.user.first_name = first_name;
     }
 
     if (last_name) {
-      setParts.push(`Last_Name = $${idx++}`);
+      setParts.push(`last_name = $${idx++}`);
       setValues.push(last_name);
       req.session.user.last_name = last_name;
     }
 
     if (email) {
-      setParts.push(`Email = $${idx++}`);
+      setParts.push(`email = $${idx++}`);
       setValues.push(email);
       req.session.user.email = email;
     }
@@ -86,7 +86,7 @@ const updateUserDetails = async (req, res) => {
         return res.redirect('/details');
       }
 
-      const pwRes = await pool.query('SELECT password_hash FROM "Users" WHERE Email = $1', [sessionEmail]);
+      const pwRes = await pool.query('SELECT password_hash FROM "users" WHERE email = $1', [sessionEmail]);
       if (!pwRes.rows.length) {
         req.session.error = 'User not found.';
         return res.redirect('/details');
@@ -115,7 +115,7 @@ const updateUserDetails = async (req, res) => {
     }
 
     setValues.push(sessionEmail);
-    const sql = `UPDATE "Users" SET ${setParts.join(', ')} WHERE Email = $${idx}`;
+    const sql = `UPDATE "Users" SET ${setParts.join(', ')} WHERE email = $${idx}`;
     const updateRes = await pool.query(sql, setValues);
 
     if (!updateRes.rowCount) {
