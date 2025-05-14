@@ -71,7 +71,7 @@ const postResetPassword = async (req, res) => {
       });
     }
 
-    // hash the password
+    // Hash password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     await pool.query(

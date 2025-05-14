@@ -81,8 +81,8 @@ const postRegister = async (req, res) => {
 
     // Insert user
     await pool.query(
-      `INSERT INTO "Users" 
-       (Email, First_Name, Last_Name, Country_Code, Phone_Number, Password_Hash, Verified, Verification_Code, Code_Expires_At)
+      `INSERT INTO "users" 
+       (email, first_name, last_name, country_code, phone_number, password_hash, verified, verification_code, code_expires_at)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
       [email, firstName, lastName, countryCode, phoneNumber, hashedPassword, false, code, expiry]
     );
