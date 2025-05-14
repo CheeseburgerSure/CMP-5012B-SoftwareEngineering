@@ -56,7 +56,7 @@ const updateUserDetails = async (req, res) => {
     if (!rows.length) return res.redirect('/login');
 
     const user = rows[0];
-    const shortenedUserID = user.userid.slice(0, 8);
+    const shortenedUserID = user.user_id.slice(0, 8);
 
     const setParts = [];
     const setValues = [];
@@ -115,7 +115,7 @@ const updateUserDetails = async (req, res) => {
     }
 
     setValues.push(sessionEmail);
-    const sql = `UPDATE "Users" SET ${setParts.join(', ')} WHERE email = $${idx}`;
+    const sql = `UPDATE "users" SET ${setParts.join(', ')} WHERE email = $${idx}`;
     const updateRes = await pool.query(sql, setValues);
 
     if (!updateRes.rowCount) {

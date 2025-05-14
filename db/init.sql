@@ -51,24 +51,38 @@ CREATE TABLE IF NOT EXISTS "transactions" (
     FOREIGN KEY (user_id) REFERENCES "users" (user_id)
 );
 
--- Password Reset Attempts Table
-CREATE TABLE IF NOT EXISTS "password_reset_attempts" (
-    id SERIAL PRIMARY KEY,
-    email VARCHAR(255) NOT NULL,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
 -- Email Verification Tokens Table
 CREATE TABLE IF NOT EXISTS "email_verification_tokens" (
-    id SERIAL PRIMARY KEY,
-    email VARCHAR(255) NOT NULL,
+    verification_token_id SERIAL PRIMARY KEY,
+    user_id UUID NOT NULL,
     token VARCHAR(255) NOT NULL,
     expires_at TIMESTAMP NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES "users" (user_id) ON DELETE CASCADE
 );
 
--- Insert users
+-- Password Reset Tokens Table
+CREATE TABLE IF NOT EXISTS "password_reset_tokens" (
+    reset_token_id SERIAL PRIMARY KEY,
+    user_id UUID NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    attempts INTEGER,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES "users" (user_id) ON DELETE CASCADE
+);
+
+-- Password Reset Attempts Table
+CREATE TABLE IF NOT EXISTS "password_reset_attempts" (
+    id SERIAL PRIMARY KEY,
+    user_id UUID NOT NULL, 
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES "users" (user_id)
+);
+
+-- Insert Users
 INSERT INTO "users" (
     user_id,
     email, 
@@ -88,7 +102,7 @@ INSERT INTO "users" (
 )
 VALUES
 (
-    uuid_generate_v4(),  -- Automatically generate a UUID
+    uuid_generate_v4(),  
     'parkflow113@gmail.com', 
     'Parkflow', 
     'Admin', 
@@ -105,7 +119,7 @@ VALUES
     100.00  
 ),
 (
-    uuid_generate_v4(),  -- Automatically generate a UUID
+    uuid_generate_v4(),  
     'itsleihl@gmail.com',  
     'Leihl',                 
     'Zambrano',              
@@ -115,7 +129,7 @@ VALUES
     '123456',  
     FALSE,                  
     NOW() + INTERVAL '1 hour',  
-    NOW(),                  
+    NOW(),                   
     FALSE,                  
     FALSE,                  
     'XYZ123456',            

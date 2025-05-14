@@ -67,7 +67,7 @@ const postRegister = async (req, res) => {
 
   try {
     // Check for existing user
-    const emailCheck = await pool.query('SELECT * FROM "Users" WHERE LOWER(Email) = $1', [email]);
+    const emailCheck = await pool.query('SELECT * FROM "users" WHERE email = $1', [email]);
     if (emailCheck.rows.length > 0) {
       return renderWithError(res, { email: 'Email is already in use.' }, formData);
     }

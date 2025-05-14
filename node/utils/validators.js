@@ -3,6 +3,12 @@
 function validatePassword(password) {
   const errors = [];
 
+  // Passwrod String Check
+  if (typeof password !== 'string') {
+    errors.push('Password is required.');
+    return { isValid: false, errors };
+  }
+
   // Length Check
   if (password.length < 8 || password.length > 16) {
     errors.push('Password must be between 8 and 16 characters.');

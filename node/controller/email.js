@@ -64,30 +64,19 @@ async function sendVerificationEmail(to, code, firstName) {
   await sendEmail(to, subject, text);
 }
 
-async function sendForgotPassword(to, code, firstName) {
+async function sendForgotPassword(to, resetLink, firstName) {
   const subject = 'Reset Your ParkFlow Password';
-
-  // Generate a token with the email and code, valid for 10 minutes
-  const token = jwt.sign(
-    { email: to, code: code },
-    'your-secret-key',
-    { expiresIn: '10m' }
-  );
-
-  const forgotLink = `http://localhost:3000/reset-password?token=${token}`;
 
   const text = `
 Hi ${firstName},
 
 We received a request to reset your password for your ParkFlow account.
 
-🔐 Your password reset code: ${code}
+You can reset your password securely using the link below:
 
-You can also reset your password using the following link:
+➡️ Reset your password: ${resetLink}
 
-➡️ Reset your password: ${forgotLink}
-
-This code and link will expire in 10 minutes. If you did not request a password reset, please ignore this email or contact support.
+This link will expire in 1 hour. If you did not request a password reset, please ignore this email or contact support.
 
 Best regards,  
 – The ParkFlow Team
@@ -95,7 +84,6 @@ Best regards,
 
   await sendEmail(to, subject, text);
 }
-
 
 // Export the functions
 module.exports = { sendEmail, sendVerificationEmail, sendForgotPassword};

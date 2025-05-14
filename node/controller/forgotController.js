@@ -1,11 +1,11 @@
 const pool = require('../db');
-const { sendForgotPassword } = require('../controller/email');  // Import the sendForgotPassword function
+const crypto = require('crypto');
+const { sendForgotPassword } = require('../controller/email');
 
 const postForgot = async (req, res) => {
   const { email } = req.body;
 
   try {
-    // Check if the email exists in the database
     const { rows } = await pool.query('SELECT * FROM "users" WHERE email = $1', [email]);
 
     if (rows.length === 0) {
@@ -14,33 +14,36 @@ const postForgot = async (req, res) => {
       });
     }
 
-    // Check if the user has made more than 3 requests in the last 24 hours
     const user = rows[0];
+    const userId = user.user_id;
+    const firstName = user.first_name;
+
+    // 2. Rate limiting: Check reset attempts
     const now = new Date();
     const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-    
+
     const { rows: attempts } = await pool.query(
-      'SELECT * FROM "password_reset_attempts" WHERE email = $1 AND timestamp > $2',
-      [email, twentyFourHoursAgo]
+          'SELECT * FROM "password_reset_attempts" WHERE user_id = $1 AND timestamp > $2',
+          [userId, twentyFourHoursAgo]
     );
 
+    // check amount of attempts 
     if (attempts.length >= 3) {
-      // Ban the user for 24 hours
       await pool.query(
-        'UPDATE "user" SET is_banned = true WHERE email = $1',
-        [email]
-      );
+        'UPDATE "users" SET is_banned = true WHERE user_id = $1',
+        [userId]
+    );
 
       return res.status(400).render('forgot-password', {
         error: 'You have made too many reset attempts. Your account is temporarily banned.',
       });
     }
 
-    // Check if the user has made a request in the last 5 minutes
+    // Cooldown: 5-minute wait
     const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
     const recentAttempts = await pool.query(
-      'SELECT * FROM "password_reset_attempts" WHERE email = $1 AND timestamp > $2',
-      [email, fiveMinutesAgo]
+      'SELECT * FROM "password_reset_attempts" WHERE user_id = $1 AND timestamp > $2',
+      [userId, fiveMinutesAgo]
     );
 
     if (recentAttempts.length > 0) {
@@ -49,17 +52,23 @@ const postForgot = async (req, res) => {
       });
     }
 
-    // Generate a password reset token (you can also use a random code here if preferred)
-    const resetCode = Math.floor(100000 + Math.random() * 900000); // Generate a random 6-digit code
+    // 4. Generate secure token & expiry
+    const token = crypto.randomBytes(32).toString('hex');
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour expiry
 
-    // Send the email with the token and reset code
-    const firstName = user.FirstName;  // Assume "FirstName" is a column in your "Users" table
-    await sendForgotPassword(email, resetCode, firstName);
-
-    // Log the reset attempt
+    // Append token to DB
     await pool.query(
-      'INSERT INTO "password_reset_attempts" (email, timestamp) VALUES ($1, $2)',
-      [email, now]
+      'INSERT INTO "password_reset_tokens" (user_id, token, expires_at) VALUES ($1, $2, $3)',
+      [userId, token, expiresAt]
+    );
+
+    // Send reset email with link
+    const resetLink = `http://localhost:3000/reset-password?token=${token}`;
+    await sendForgotPassword(email, resetLink, firstName);
+
+    await pool.query(
+      'INSERT INTO "password_reset_attempts" (user_id, timestamp) VALUES ($1, $2)',
+      [userId, now]
     );
 
     res.render('forgot-password', {
@@ -68,7 +77,9 @@ const postForgot = async (req, res) => {
 
   } catch (err) {
     console.error('Error processing forgot password:', err);
-    res.status(500).render('forgot-password', { error: 'There was an error processing your request. Please try again later.' });
+    res.status(500).render('forgot-password', {
+      error: 'There was an error processing your request. Please try again later.'
+    });
   }
 };
 
