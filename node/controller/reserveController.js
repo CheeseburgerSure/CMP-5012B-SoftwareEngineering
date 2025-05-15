@@ -2,7 +2,7 @@ const pool = require('../db');
 
 const getReservePage = async (req, res) => {
   try {
-    // available parking lots
+    // list of all parking lots
     const lotRes = await pool.query('SELECT * FROM parking_lots');
     const lots = lotRes.rows;
 

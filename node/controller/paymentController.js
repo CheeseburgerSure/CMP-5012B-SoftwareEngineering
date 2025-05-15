@@ -1,6 +1,7 @@
 const pool = require('../db');
 const { sendEmail } = require('./email');
 
+// This controller handles the payment page and payment processing
 const getPaymentPage = async (req, res) => {
   const { booking_id } = req.params;
   const email = req.session.user?.email;
@@ -22,6 +23,7 @@ const getPaymentPage = async (req, res) => {
     const options = { day: 'numeric', month: 'long', year: 'numeric' };
     const formattedDate = rawDate.toLocaleDateString('en-GB', options); 
 
+    // Check if the booking is already paid
     res.render('payment', {
       user,
       booking,
@@ -36,6 +38,7 @@ const getPaymentPage = async (req, res) => {
   }
 };
 
+// This handels the payment processing
 const postPay = async (req, res) => {
   const { booking_id } = req.params;
   const email = req.session.user?.email;
