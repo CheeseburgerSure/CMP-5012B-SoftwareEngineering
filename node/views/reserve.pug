@@ -1,28 +1,78 @@
 doctype html
-html
+html(lang="en")
   head
-    title Reserve a parking space
-    link(rel="stylesheet" href="css/main.css")
+    title Reserve a Parking Space | ParkFlow
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet" href="/styles.css")
+    link(rel="stylesheet" href="/bootstrap.css")
+
   body
-    header
-      nav
-        ul
-            li: a(href="/") Home
-            li: a(href="/adminLogin") Admin Login
-            li: a(href="/adminPanel") Admin Panel
-            li: a(href="/createAccount") Create Account
-            li: a(href="/forgotPassword") Forgot Password
-            li: a(href="/login") Login
-            li: a(href="/payment") Payment
-            li: a(href="/reserve") Reserve
-            li: a(href="/resetPassword") Reset Password
-            li: a(href="/messenger") (Temp) Messenger
-    main
-      section
-        h1 RESERVE
-        form#reserveForm
-          label(for="destination") Enter destination...
-          br
-          input(type="text" id="destination" name="destination" value="Search by place name or postcode.")
-          input(type="submit" value="Search")
-    footer
+    nav.navbar.navbar-expand-lg.navbar-dark.bg-nav 
+      .container.px-5 
+        img.img-thumbnail.m-sm-3.w-5(src="/logo.png" alt="ParkFlow Logo")
+        a.navbar-brand(href="/") ParkFlow
+        button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent")
+          span.navbar-toggler-icon
+        .collapse.navbar-collapse#navbarSupportedContent 
+          ul.navbar-nav.ms-auto.mb-2.mb-lg-0 
+            li.nav-item: a.nav-link(href="/dashboard") Dashboard
+            li.nav-item: a.nav-link(href="/logout") Logout
+
+    .container-fluid.ps-md-0.py-xxl-6
+      .row.g-0
+        .d-none.d-md-flex.col-md-4.col-lg-6.bg-image.justify-content-center
+          img.loginImg(src="/logo.png" alt="ParkFlow Logo")
+        .col-md-8.col-lg-6
+          .d-flex.align-items-center.py-5
+            .container
+              .row
+                .col-md-9.col-lg-8.mx-auto
+                  h3.login-heading.mb-4 Reserve a Parking Space
+
+                  form(method="POST", action="/reserve/submit")
+                    .form-floating.mb-3
+                      select.form-select(name="location_id" required)
+                        option(value="" selected disabled) Select Location
+                        each lot in lots
+                          option(value=lot.location_id)= lot.location + ' | £' + lot.rate + '/hr'
+
+                    .form-floating.mb-3
+                      input#date.form-control(
+                        type="date",
+                        name="date",
+                        value=todayDate,
+                        min=todayDate,
+                        max=todayDate,
+                        required
+                      )
+                      label(for="date") Booking Date
+
+                    .form-floating.mb-3
+                      input.form-control(type="time", name="time", required)
+                      label(for="time") Booking Start Time
+
+                    .form-floating.mb-3
+                      select#duration.form-select(name="duration", required)
+                        option(value="" selected disabled) -- Select Duration --
+                        option(value="1 hour") 1 hour
+                        option(value="2 hours") 2 hours
+                        option(value="3 hours") 3 hours
+
+                    .form-floating.mb-3
+                      input.form-control(type="text", name="plate", placeholder="Enter car plate", required)
+                      label(for="plate") Car Number
+
+                    .form-group.mb-3
+                      label.text-muted Spaces Available and Occupied
+                      ul
+                        each lot in lots
+                          li= `${lot.location}: ${lot.available_today} available / ${lot.occupied_today} occupied`
+
+                    .d-grid
+                      button.btn.btn-primary(type="submit") Reserve Now
+
+    footer.py-5.bg-nav
+      .container.px-5 
+        p.m-0.text-center.text-white &copy; 2025 ParkFlow. All Rights Reserved.
+

@@ -1,7 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { postAddBalance } = require('../controller/balanceController');
+const dashboardController = require('../controller/dashboardController');
 
-router.post('/add-balance', postAddBalance);
+
+router.get('/', (req, res) => {
+  if (!req.session.user) {
+    return res.redirect('/login');
+  }
+  // If user is logged in, render dashboard
+  dashboardController.getDashboardData(req, res);
+});
 
 module.exports = router;

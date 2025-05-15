@@ -1,46 +1,30 @@
 doctype html
-html
+html(lang="en")
   head
-    title Payment
-    link(rel="stylesheet" href="css/main.css")
+    title Payment | ParkFlow
+    link(rel="stylesheet" href="/styles.css")
+    link(rel="stylesheet" href="/bootstrap.css")
   body
-    header
-      nav
-        ul
-            li: a(href="/") Home
-            li: a(href="/adminLogin") Admin Login
-            li: a(href="/adminPanel") Admin Panel
-            li: a(href="/createAccount") Create Account
-            li: a(href="/forgotPassword") Forgot Password
-            li: a(href="/login") Login
-            li: a(href="/payment") Payment
-            li: a(href="/reserve") Reserve
-            li: a(href="/resetPassword") Reset Password
-            li: a(href="/messenger") (Temp) Messenger
-    main
-      section
-        h1 Payment
-        h2 UEA Car Park
-        p Location Code: 12345
-        h2 Session
-        table
-          tr
-            th Session ID
-            td 000001
-          tr
-            th Vehicle
-            td GG75QFH
-          tr
-            th Duration
-            td 2 hrs
-          tr
-            th Start
-            td 12:00 17/02/2025
-          tr
-            th End
-            td 14:00 17/02/2025
-        h2 Payment
-        p Tariff Amount: £5.00
-        p Payment Type: CARD
-        button Confirm Payment
-    footer
+    nav.navbar.navbar-expand-lg.navbar-dark.bg-nav 
+      .container.px-5 
+        a.navbar-brand(href="/") ParkFlow
+        ul.navbar-nav.ms-auto
+          li.nav-item: a.nav-link(href="/dashboard") Dashboard
+          li.nav-item: a.nav-link(href="/logout") Logout
+
+    .container.mt-5
+      h2.text-center Booking Payment
+      if booking
+        p Location: #{booking.location}
+        p Date: #{formattedDate}
+        p Price: £#{price.toFixed(2)}
+        p Balance: £#{balance.toFixed(2)}
+
+        if canPay
+          form(method="POST" action=`/payment/${booking.booking_id}`)
+            button.btn.btn-success(type="submit") Confirm Payment
+        else
+          p.text-danger Not enough money, you broke
+
+    footer.text-center.mt-5
+      p &copy; 2025 ParkFlow. All Rights Reserved.
