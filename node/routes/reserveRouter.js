@@ -7,5 +7,3 @@ router.get('/reserve', getReservePage);
 router.post('/reserve/submit', postReserve); 
 
 module.exports = router;
-
-fdfdfdf
