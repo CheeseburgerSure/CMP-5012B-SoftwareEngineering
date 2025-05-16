@@ -30,6 +30,7 @@ html(lang="en")
               th Email
               th Role
               th Status
+              th Balance
               th Actions
           tbody
             each user in users
@@ -39,6 +40,7 @@ html(lang="en")
                 td= user.email
                 td= user.role
                 td= user.status
+                td= user.balance
                 td: a(href=`/admin/users/${user.id}/edit`) Edit
 
     // Footer

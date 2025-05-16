@@ -14,7 +14,7 @@ async function getTotalUserCount() {
 // renders the admin panel with user count
 const renderAdminPanel = async (req, res) => {
   if (!(await isUserAdmin(req))) {
-    return res.status(403).send('Admins only.');
+    return res.redirect('/login');
   }
   try {
     const userCount = await getTotalUserCount();
@@ -28,18 +28,19 @@ const renderAdminPanel = async (req, res) => {
 // loads the page where admins can view and edit users
 const renderAdminUsers = async (req, res) => {
   if (!(await isUserAdmin(req))) {
-    return res.status(403).send('Admins only.');
+    return res.redirect('/login');
   }
   try {
     const result = await pool.query(
-      'SELECT user_id, first_name, last_name, email, is_admin, is_banned FROM "users"'
+      'SELECT user_id, first_name, last_name, email, is_admin, is_banned, balance FROM "users"'
     );
     const users = result.rows.map(user => ({
       id: user.user_id,
       name: `${user.first_name || ''} ${user.last_name || ''}`.trim(),
       email: user.email,
       role: user.is_admin ? 'Admin' : 'User',
-      status: user.is_banned ? 'Banned' : 'Active'
+      status: user.is_banned ? 'Banned' : 'Active',
+      balance: user.balance //
     }));
     res.render('adminUsers', { users });
   } catch (error) {
@@ -51,7 +52,7 @@ const renderAdminUsers = async (req, res) => {
 // loads the page where admins can view and edit bookings
 const renderAdminBookings = async (req, res) => {
   if (!(await isUserAdmin(req))) {
-    return res.status(403).send('Admins only.');
+    return res.redirect('/login');
   }
   try {
     const result = await pool.query(
@@ -75,12 +76,12 @@ const renderAdminBookings = async (req, res) => {
 // render the edit user page
 const renderEditUser = async (req, res) => {
   if (!(await isUserAdmin(req))) {
-    return res.status(403).send('Admins only.');
+    return res.redirect('/login');
   }
   const userId = req.params.id;
   try {
     const result = await pool.query(
-      'SELECT user_id, email, first_name, last_name, is_banned FROM "users" WHERE user_id = $1',
+      'SELECT user_id, email, first_name, last_name, is_banned, balance FROM "users" WHERE user_id = $1',
       [userId]
     );
     if (result.rows.length === 0) {
@@ -93,6 +94,7 @@ const renderEditUser = async (req, res) => {
         email: user.email,
         first_name: user.first_name,
         last_name: user.last_name,
+        balance: user.balance,
         status: user.is_banned ? 'Banned' : 'Active'
       }
     });
@@ -105,18 +107,19 @@ const renderEditUser = async (req, res) => {
 // edit user handler
 const postEditUser = async (req, res) => {
   if (!(await isUserAdmin(req))) {
-    return res.status(403).send('Admins only.');
+    return res.redirect('/login');
   }
   const userId = req.params.id;
-  const { email, first_name, last_name, status } = req.body;
+  const { email, first_name, last_name, status, balance } = req.body;
   try {
     await pool.query(
-      'UPDATE "users" SET email = $1, first_name = $2, last_name = $3, is_banned = $4 WHERE user_id = $5',
+      'UPDATE "users" SET email = $1, first_name = $2, last_name = $3, is_banned = $4, balance = $5 WHERE user_id = $6',
       [
         email,
         first_name,
         last_name,
         status === 'Banned',
+        balance,
         userId
       ]
     );

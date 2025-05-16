@@ -33,6 +33,10 @@ html(lang="en")
           input#last_name(type="text", name="last_name", value=user.last_name, required)
 
         .form-group
+          label(for="balance") Balance:
+          input#balance(type="number", name="balance", value=user.balance, step="0.01", min="0", required)
+
+        .form-group
           label(for="status") Status:
           select#status(name="status")
             option(value="Active" selected=user.status=='Active') Active
