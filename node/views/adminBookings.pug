@@ -7,6 +7,8 @@ html(lang="en")
     link(rel="icon" href="/logo.png")
     link(rel="stylesheet" href="/styles.css")
     link(rel="stylesheet" href="/bootstrap.css")
+    link(rel="stylesheet" href="/dashboardbootstrap.css")
+    link(rel="stylesheet" href="/adminbootstrap.css")
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css")
 
   body
@@ -14,7 +16,7 @@ html(lang="en")
     nav.navbar.navbar-expand-lg.navbar-dark.bg-nav 
       .container.px-5 
         img.img-thumbnail.m-sm-3.w-5(src="/logo.png" alt="Park Flow Logo")
-        a.navbar-brand(href="#") Parkflow
+        a.navbar-brand(href="/dashboard") Parkflow
         button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation")
           span.navbar-toggler-icon
         .collapse.navbar-collapse#navbarResponsive 
@@ -24,34 +26,51 @@ html(lang="en")
             li.nav-item: a.nav-link(href="/logout") Logout
 
     // Page Content
-    .content
-      h1 Admin - Bookings
 
-      .table-container
-        table.user-table
-          thead
-            tr
-              th Booking ID
-              th User ID
-              th User Name
-              th Location
-              th Date
-              th Time
-              th Price
-              th Paid
-              th Actions
-          tbody
-            each booking in bookings
-              tr
-                td= booking.id
-                td= booking.user_id
-                td= booking.user_name
-                td= booking.location
-                td= booking.booking_date
-                td= booking.time_booked_for
-                td= booking.price
-                td= booking.booking_paid ? 'Yes' : 'No'
-                td: a(href=`/admin/bookings/${booking.id}/edit`) Edit
+    .container-fluid.px-4.p-md-5
+      h1.mt-4 Admin - Bookings
+
+      .card.mb-4 
+        .card-header
+          i.fas.fa-table.me-1 
+          | Data Table
+        .card-body
+          .table-container
+            table.table.table-striped.table-bordered
+              thead 
+                tr 
+                  th Booking ID
+                  th User ID
+                  th User Name
+                  th Location
+                  th Date
+                  th Time
+                  th Price
+                  th Paid
+                  th Actions
+              tfoot 
+                tr 
+                  th Booking ID
+                  th User ID
+                  th User Name
+                  th Location
+                  th Date
+                  th Time
+                  th Price
+                  th Paid
+                  th Actions
+              tbody 
+              each booking in bookings
+                tr
+                  td= booking.id 
+                  td= booking.user_id
+                  td= booking.user_name
+                  td= booking.location
+                  td= booking.booking_date
+                  td= booking.time_booked_for
+                  td= booking.price
+                  td= booking.booking_paid ? 'Yes' : 'No'
+                  td: a(href=`/admin/bookings/${booking.id}/edit`) Edit
 
     // Footer
     footer.py-5.bg-nav

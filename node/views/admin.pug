@@ -15,7 +15,7 @@ html(lang="en")
     nav.navbar.navbar-expand-lg.navbar-dark.bg-nav 
       .container.px-5 
         img.img-thumbnail.m-sm-3.w-5(src="/logo.png" alt="Park Flow Logo")
-        a.navbar-brand(href="#") Parkflow
+        a.navbar-brand(href="/dashboard") Parkflow
         button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation")
           span.navbar-toggler-icon
         .collapse.navbar-collapse#navbarResponsive 
@@ -25,9 +25,9 @@ html(lang="en")
             li.nav-item: a.nav-link(href="/logout") Logout
 
     // User Dashboard Content
-    .row.mt-4
-      .col-xl-4.col-md-6.mb-4
-        .card.border-left-primary.shadow.h-100.py-2 
+    .row.mt-4.justify-content-sm-center
+      .col-xl-3.col-md-6.mb-4.m-3
+        .card.border-left-primary.shadow.h-100.py-2
           .card-body 
             .row.no-gutters.align-items-center 
               .col.mr-2 
@@ -36,9 +36,9 @@ html(lang="en")
               .col-auto 
                 i.fas.fa-users.fa-2x.text-gray-300
       
-      .col-xl-4.col-md-6.mb-4
-        .card.border-left-success.shadow.h-100.py-2 
-          .card-body 
+      .col-xl-3.col-md-6.mb-4.m-3
+        .card.border-left-success.shadow.h-100.py-2
+          .card-body
             .row.no-gutters.align-items-center 
               .col.mr-2 
                 .text-xs.font-weight-bold.text-success.text-uppercase.mb-1 Bookings
@@ -46,7 +46,7 @@ html(lang="en")
               .col-auto
                 i.fas.fa-calendar-check.fa-2x.text-gray-300
       
-      .col-xl-4.col-md-6.mb-4
+      .col-xl-3.col-md-6.mb-4.m-3
         .card.border-left-info.shadow.h-100.py-2 
           .card-body 
             .row.no-gutters.align-items-center 
@@ -58,7 +58,7 @@ html(lang="en")
 
 
     .content
-      .form-container
+      .form-container.p-5
         h1 Admin Panel
 
         .current-users-count
@@ -66,10 +66,11 @@ html(lang="en")
 
         // Available Balance and Ongoing Sessions
         section#dashboard-stats
-          a.stat-box(href="/admin/users")
-            h3 USERS
-          a.stat-box(href="/admin/bookings")
-            h3 BOOKINGS
+          .d-grid.gap-3.d-sm-flex.justify-content-sm-center.p-5
+            a.stat-box.btn.btn-primary.btn-lg.px-4.me-sm-3(href="/admin/users")
+              h3 USERS
+            a.stat-box.btn.btn-light.btn-lg.px-4.me-sm-3(href="/admin/bookings")
+              h3 BOOKINGS
 
     // Footer
     footer.py-5.bg-nav
