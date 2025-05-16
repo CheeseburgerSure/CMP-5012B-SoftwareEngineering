@@ -1,6 +1,6 @@
 const pool = require('../db');
 
-// Fetch user details for dashboard
+// Gets user details for dashboard
 const getDashboardData = async (req, res) => {
   try {
       if (!req.session.user?.email) return res.redirect('/login');
@@ -15,7 +15,7 @@ const getDashboardData = async (req, res) => {
       
       const user = rows[0];
 
-    // Log the user data to check if it exists
+    // Log the user data
     console.log('User data:', user);
 
     // Render dashboard

@@ -7,7 +7,9 @@ const {
   postEditUser,
   renderAdminBookings,
   renderEditBooking,
-  postEditBooking
+  postEditBooking,
+  searchAdminUsers,
+  searchAdminBookings
 } = require('../controller/adminController');
 const pool = require('../db');
 
@@ -35,7 +37,7 @@ const renderDashboard = async (req, res) => {
 
 module.exports = { renderDashboard, renderAdminPanel };
 
-// Admin routes (no admin middleware)
+// Admin routes
 router.get('/admin', renderAdminPanel);
 router.get('/admin/users', renderAdminUsers);
 router.get('/admin/users/:id/edit', renderEditUser);
@@ -43,5 +45,7 @@ router.post('/admin/users/:id/edit', postEditUser);
 router.get('/admin/bookings', renderAdminBookings);
 router.get('/admin/bookings/:id/edit', renderEditBooking);
 router.post('/admin/bookings/:id/edit', postEditBooking);
+router.get('/admin/users/search', searchAdminUsers);
+router.get('/admin/bookings/search', searchAdminBookings);
 
 module.exports = router;

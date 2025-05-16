@@ -24,12 +24,22 @@ html(lang="en")
             li.nav-item: a.nav-link(href="/logout") Logout
 
     // Page Content
-    .content
-      h1 Admin - Bookings
+    .container.mt-5
+      h1.mb-4.text-center Admin - Bookings
 
-      .table-container
-        table.user-table
-          thead
+      // Search Bar
+      form(method="GET" action="/admin/bookings/search" class="row mb-4 justify-content-center")
+        .col-md-6
+          input.form-control(type="text", name="q", placeholder="Search by Booking ID, Username or Location")
+        .col-md-2
+          button.btn.btn-primary.w-100(type="submit")
+            i.fas.fa-search
+            |  Search
+
+      // Bookings Table
+      .table-responsive
+        table.table.table-striped.table-hover
+          thead.table-dark
             tr
               th Booking ID
               th User ID
@@ -37,28 +47,49 @@ html(lang="en")
               th Location
               th Date
               th Time
-              th Price
+              th Price (£)
               th Paid
               th Actions
           tbody
-            each booking in bookings
+            if bookings && bookings.length
+              each booking in bookings
+                tr
+                  td= booking.id
+                  td= booking.user_id
+                  td= booking.user_name
+                  td= booking.location
+                  // Format date as dd/mm/yyyy
+                  -
+                    var dateObj = new Date(booking.booking_date);
+                    var day = String(dateObj.getDate()).padStart(2, '0');
+                    var month = String(dateObj.getMonth() + 1).padStart(2, '0');
+                    var year = dateObj.getFullYear();
+                    var formattedDate = `${day}/${month}/${year}`;
+                  td= formattedDate
+                  // Format time as HH:mm
+                  -
+                    var time = booking.time_booked_for;
+                    var formattedTime = '';
+                    if (time) {
+                      var t = time.split(':');
+                      formattedTime = `${t[0].padStart(2, '0')}:${t[1].padStart(2, '0')}`;
+                    }
+                  td= formattedTime
+                  td= booking.price
+                  td= booking.booking_paid ? 'Yes' : 'No'
+                  td
+                    a.btn.btn-sm.btn-outline-primary(href=`/admin/bookings/${booking.id}/edit`)
+                      i.fas.fa-edit
+                      |  Edit
+            else
               tr
-                td= booking.id
-                td= booking.user_id
-                td= booking.user_name
-                td= booking.location
-                td= booking.booking_date
-                td= booking.time_booked_for
-                td= booking.price
-                td= booking.booking_paid ? 'Yes' : 'No'
-                td: a(href=`/admin/bookings/${booking.id}/edit`) Edit
+                td(colspan="9" class="text-center") No bookings found.
 
     // Footer
     footer.py-5.bg-nav
-      .container.pix-5 
+      .container.px-5 
         p.m-0.text-center.text-white Copyright &copy; 2025 ParkFlow. All Rights Reserved.
 
-//Burger dropdown support and other bootstrap basics
-script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js")
 
 

@@ -1,7 +1,7 @@
 const pool = require('../db');
 const { sendEmail } = require('./email');
 
-// This controller handles the payment page and payment processing
+// Handles the payment page and payment processing
 const getPaymentPage = async (req, res) => {
   const { booking_id } = req.params;
   const email = req.session.user?.email;
@@ -38,7 +38,7 @@ const getPaymentPage = async (req, res) => {
   }
 };
 
-// This handels the payment processing
+// Payment processing handler
 const postPay = async (req, res) => {
   const { booking_id } = req.params;
   const email = req.session.user?.email;
@@ -64,7 +64,7 @@ const postPay = async (req, res) => {
     await pool.query('UPDATE bookings SET booking_paid = true WHERE booking_id = $1', [booking_id]);
     await pool.query('INSERT INTO transactions (user_id, amount) VALUES ($1, $2)', [user.user_id, price]);
 
-    /// Formatted date for email
+    /// Formatted date
     const rawDate = new Date(booking.booking_date);
     const options = { day: 'numeric', month: 'long', year: 'numeric' };
     const formattedDate = rawDate.toLocaleDateString('en-GB', options);

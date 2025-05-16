@@ -12,7 +12,7 @@ const postAddBalance = async (req, res) => {
       return res.status(400).send('Invalid request.');
     }
 
-    // Fetch the user's ID
+    // Fetch users ID
     const userResult = await pool.query(
       'SELECT user_id FROM "users" WHERE email = $1',
       [email]
@@ -30,7 +30,7 @@ const postAddBalance = async (req, res) => {
       [amount, userId]
     );
 
-    // Insert transaction with timestamp
+    // Insert transaction
     await pool.query(
       'INSERT INTO "transactions" (user_id, amount) VALUES ($1, $2)',
       [userId, amount]

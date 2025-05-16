@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const { sendVerificationEmail } = require('./email');
 const { validatePassword } = require('../utils/validators.js');
 
-// Helper: Render error form
+// Render error form
 function renderWithError(res, error, data) {
   return res.render('create-account', {
     error,
@@ -29,11 +29,11 @@ const postRegister = async (req, res) => {
   const errors = {};
   const formData = { firstName, lastName, countryCode, phoneNumber, email, confirmEmail, password, confirmPassword };
 
-  // Normalize email
+  // formats email
   email = email.toLowerCase();
   confirmEmail = confirmEmail.toLowerCase();
 
-  // Basic validation
+  // validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!email || !emailRegex.test(email)) {
     errors.email = 'Invalid or missing email.';
@@ -56,7 +56,7 @@ const postRegister = async (req, res) => {
     errors.password = passwordErrors;
   }
 
-  // Optional: Validate phone number format (basic length check)
+  // phone nuumber format validation 
   if (!/^\d{7,15}$/.test(phoneNumber)) {
     errors.phoneNumber = 'Invalid phone number format.';
   }
@@ -90,7 +90,7 @@ const postRegister = async (req, res) => {
     // Send verification email
     await sendVerificationEmail(email, code, firstName);
 
-    // Generate JWT
+    // Generate Json web token
     const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '10m' });
 
     return res.redirect(`/verify?token=${token}`);
