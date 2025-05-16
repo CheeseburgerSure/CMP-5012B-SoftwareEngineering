@@ -25,11 +25,10 @@ html(lang="en")
           form(method="POST" action=`/payment/${booking.booking_id}`)
             button.btn.btn-success(type="submit") Confirm Payment
         else
-          p.text-danger Not enough money, you broke
+          p.text-danger You dont have enough balance to pay for this booking. Please top up your balance.
 
     footer.text-center.mt-5
       p &copy; 2025 ParkFlow. All Rights Reserved.
-
       
 
     
