@@ -37,7 +37,7 @@ const renderDashboard = async (req, res) => {
 
 module.exports = { renderDashboard, renderAdminPanel };
 
-// Admin routes (no admin middleware)
+// Admin routes
 router.get('/admin', renderAdminPanel);
 router.get('/admin/users', renderAdminUsers);
 router.get('/admin/users/:id/edit', renderEditUser);
