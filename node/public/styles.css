@@ -84,16 +84,16 @@ h1 {
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
-  width: 150px;
+  width: 50%;
 }
 
 .stat-box h3 {
-  font-size: 18px;
+  font-size: 1.5em;
   margin-bottom: 10px;
 }
 
 .stat-box p {
-  font-size: 22px;
+  font-size: 2em;
   font-weight: bold;
 }
 
