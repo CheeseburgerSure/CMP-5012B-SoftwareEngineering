@@ -7,6 +7,8 @@ html(lang="en")
     link(rel="icon" href="/logo.png")
     link(rel="stylesheet" href="/styles.css")
     link(rel="stylesheet" href="/bootstrap.css")
+    link(rel="stylesheet" href="/dashboardbootstrap.css")
+    link(rel="stylesheet" href="/adminbootstrap.css")
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css")
 
   body
@@ -14,7 +16,7 @@ html(lang="en")
     nav.navbar.navbar-expand-lg.navbar-dark.bg-nav 
       .container.px-5 
         img.img-thumbnail.m-sm-3.w-5(src="/logo.png" alt="Park Flow Logo")
-        a.navbar-brand(href="#") Parkflow
+        a.navbar-brand(href="/dashboard") Parkflow
         button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation")
           span.navbar-toggler-icon
         .collapse.navbar-collapse#navbarResponsive 
@@ -24,66 +26,51 @@ html(lang="en")
             li.nav-item: a.nav-link(href="/logout") Logout
 
     // Page Content
-    .container.mt-5
-      h1.mb-4.text-center Admin - Bookings
 
-      // Search Bar
-      form(method="GET" action="/admin/bookings/search" class="row mb-4 justify-content-center")
-        .col-md-6
-          input.form-control(type="text", name="q", placeholder="Search by Booking ID, Username or Location")
-        .col-md-2
-          button.btn.btn-primary.w-100(type="submit")
-            i.fas.fa-search
-            |  Search
+    .container-fluid.px-4.p-md-5
+      h1.mt-4 Admin - Bookings
 
-      // Bookings Table
-      .table-responsive
-        table.table.table-striped.table-hover
-          thead.table-dark
-            tr
-              th Booking ID
-              th User ID
-              th User Name
-              th Location
-              th Date
-              th Time
-              th Price (£)
-              th Paid
-              th Actions
-          tbody
-            if bookings && bookings.length
+      .card.mb-4 
+        .card-header
+          i.fas.fa-table.me-1 
+          | Data Table
+        .card-body
+          .table-container
+            table.table.table-striped.table-bordered
+              thead 
+                tr 
+                  th Booking ID
+                  th User ID
+                  th User Name
+                  th Location
+                  th Date
+                  th Time
+                  th Price
+                  th Paid
+                  th Actions
+              tfoot 
+                tr 
+                  th Booking ID
+                  th User ID
+                  th User Name
+                  th Location
+                  th Date
+                  th Time
+                  th Price
+                  th Paid
+                  th Actions
+              tbody 
               each booking in bookings
                 tr
-                  td= booking.id
+                  td= booking.id 
                   td= booking.user_id
                   td= booking.user_name
                   td= booking.location
-                  // Format date as dd/mm/yyyy
-                  -
-                    var dateObj = new Date(booking.booking_date);
-                    var day = String(dateObj.getDate()).padStart(2, '0');
-                    var month = String(dateObj.getMonth() + 1).padStart(2, '0');
-                    var year = dateObj.getFullYear();
-                    var formattedDate = `${day}/${month}/${year}`;
-                  td= formattedDate
-                  // Format time as HH:mm
-                  -
-                    var time = booking.time_booked_for;
-                    var formattedTime = '';
-                    if (time) {
-                      var t = time.split(':');
-                      formattedTime = `${t[0].padStart(2, '0')}:${t[1].padStart(2, '0')}`;
-                    }
-                  td= formattedTime
+                  td= booking.booking_date
+                  td= booking.time_booked_for
                   td= booking.price
                   td= booking.booking_paid ? 'Yes' : 'No'
-                  td
-                    a.btn.btn-sm.btn-outline-primary(href=`/admin/bookings/${booking.id}/edit`)
-                      i.fas.fa-edit
-                      |  Edit
-            else
-              tr
-                td(colspan="9" class="text-center") No bookings found.
+                  td: a(href=`/admin/bookings/${booking.id}/edit`) Edit
 
     // Footer
     footer.py-5.bg-nav
