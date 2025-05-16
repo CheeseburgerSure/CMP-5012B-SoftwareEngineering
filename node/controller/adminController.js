@@ -13,6 +13,9 @@ async function getTotalUserCount() {
 
 // renders the admin panel with user count
 const renderAdminPanel = async (req, res) => {
+  if (!(await isUserAdmin(req))) {
+    return res.status(403).send('Admins only.');
+  }
   try {
     const userCount = await getTotalUserCount();
     res.render('admin', { userCount });
@@ -24,6 +27,9 @@ const renderAdminPanel = async (req, res) => {
 
 // loads the page where admins can view and edit users
 const renderAdminUsers = async (req, res) => {
+  if (!(await isUserAdmin(req))) {
+    return res.status(403).send('Admins only.');
+  }
   try {
     const result = await pool.query(
       'SELECT user_id, first_name, last_name, email, is_admin, is_banned FROM "users"'
@@ -44,6 +50,9 @@ const renderAdminUsers = async (req, res) => {
 
 // loads the page where admins can view and edit bookings
 const renderAdminBookings = async (req, res) => {
+  if (!(await isUserAdmin(req))) {
+    return res.status(403).send('Admins only.');
+  }
   try {
     const result = await pool.query(
       `SELECT b.booking_id, b.user_id, u.first_name, u.last_name
@@ -65,6 +74,9 @@ const renderAdminBookings = async (req, res) => {
 
 // render the edit user page
 const renderEditUser = async (req, res) => {
+  if (!(await isUserAdmin(req))) {
+    return res.status(403).send('Admins only.');
+  }
   const userId = req.params.id;
   try {
     const result = await pool.query(
@@ -92,6 +104,9 @@ const renderEditUser = async (req, res) => {
 
 // edit user handler
 const postEditUser = async (req, res) => {
+  if (!(await isUserAdmin(req))) {
+    return res.status(403).send('Admins only.');
+  }
   const userId = req.params.id;
   const { email, first_name, last_name, status } = req.body;
   try {
@@ -112,11 +127,27 @@ const postEditUser = async (req, res) => {
   }
 };
 
+// check if the current session user is an admin
+async function isUserAdmin(req) {
+  if (!req.session || !req.session.user) return false;
+  try {
+    const result = await pool.query(
+      'SELECT is_admin FROM "users" WHERE user_id = $1',
+      [req.session.user.id]
+    );
+    return result.rows.length > 0 && result.rows[0].is_admin === true;
+  } catch (error) {
+    console.error('Error checking admin status:', error);
+    return false;
+  }
+}
+
 module.exports = {
   renderAdminPanel,
   renderAdminUsers,
   renderEditUser,
   postEditUser,
-  renderAdminBookings
+  renderAdminBookings,
+  isUserAdmin
 };
 
