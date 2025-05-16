@@ -117,24 +117,24 @@ VALUES
     FALSE,  
     'XYZ987654',  
     100.00  
+),
+(
+    uuid_generate_v4(),  
+    'itsleihl@gmail.com',  
+    'Leihl',                 
+    'Zambrano',              
+    '+44',                   
+    '9876543210',           
+    '$2b$12$cE26VdAa8d/LL2MY6oxgsOhTKyrkbeudYaJ4oQwAi0RhlUPy8G71K',  
+    '123456',  
+    TRUE,               
+    NOW() + INTERVAL '1 hour',  
+    NOW(),                   
+    FALSE,                  
+    FALSE,                  
+    'XYZ123456',            
+    50.00                   
 );
--- (
---     uuid_generate_v4(),  
---     'itsleihl@gmail.com',  
---     'Leihl',                 
---     'Zambrano',              
---     '+44',                   
---     '9876543210',           
---     '$2b$12$cE26VdAa8d/LL2MY6oxgsOhTKyrkbeudYaJ4oQwAi0RhlUPy8G71K',  
---     '123456',  
---     FALSE,                  
---     NOW() + INTERVAL '1 hour',  
---     NOW(),                   
---     FALSE,                  
---     FALSE,                  
---     'XYZ123456',            
---     50.00                   
--- );
 
 -- Insert parking lot data
 INSERT INTO "parking_lots" (location_id, location, parking_spaces, occupied_spaces, rate)

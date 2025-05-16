@@ -9,12 +9,7 @@ router.get('/', (req, res) => {
   }
 
   // If user is logged in, render the change details page
-  const user = req.session.user;
-  const isAdmin = !!user.is_admin;
-  const first_name = user.first_name;
-  const balance = user.balance;
-  const sessions = user.sessions;
-  res.render('dashboard', { isAdmin, first_name, balance, sessions });
+  detailsController.getDetailsPage(req, res);
 });
 
 router.post('/change-details', detailsController.updateUserDetails);
