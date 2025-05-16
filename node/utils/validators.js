@@ -3,7 +3,7 @@
 function validatePassword(password) {
   const errors = [];
 
-  // Passwrod String Check
+  // Password String Check
   if (typeof password !== 'string') {
     errors.push('Password is required.');
     return { isValid: false, errors };
