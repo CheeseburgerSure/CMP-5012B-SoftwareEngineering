@@ -125,7 +125,7 @@ VALUES
     'Zambrano',              
     '+44',                   
     '9876543210',           
-    '$2b$12$cE26VdAa8d/LL2MY6oxgsOhTKyrkbeudYaJ4oQwAi0RhlUPy8G71K',  
+    '$2b$10$dRNKn8CeEAc17kCsyEH94uj0gjRO.QoG6XOj7OOKJBvytofnkpZPm',  
     '123456',  
     TRUE,               
     NOW() + INTERVAL '1 hour',  
@@ -134,6 +134,23 @@ VALUES
     FALSE,                  
     'XYZ123456',            
     50.00                   
+),
+(
+    uuid_generate_v4(),
+    'test@example.com',  
+    'Test User',                 
+    '1',              
+    '+44',                   
+    '9876543210',           
+    '$2b$10$0.pLc30mYAzNXYjAlAmNPubK6Gh8EnrgK1d17wxjmTrAUSdRo9Ttq',  
+    '123456',  
+    TRUE,               
+    NOW() + INTERVAL '1 hour',  
+    NOW(),                   
+    FALSE,                  
+    FALSE,                  
+    'XYZ123456',            
+    0.00      
 );
 
 -- Insert parking lot data

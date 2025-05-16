@@ -66,6 +66,8 @@ app.get("/create-account", (req, res) => {
 });
 
 // Start the server
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`🚀 Server running at http://localhost:${port} 🚀`);
 });
+
+module.exports = server;
