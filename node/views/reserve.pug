@@ -9,6 +9,7 @@ html(lang="en")
     link(rel="stylesheet" href="/bootstrap.css")
 
   body
+    // Navigation
     nav.navbar.navbar-expand-lg.navbar-dark.bg-nav 
       .container.px-5 
         img.img-thumbnail.m-sm-3.w-5(src="/logo.png" alt="ParkFlow Logo")
@@ -19,6 +20,8 @@ html(lang="en")
           ul.navbar-nav.ms-auto.mb-2.mb-lg-0 
             li.nav-item: a.nav-link(href="/dashboard") Dashboard
             li.nav-item: a.nav-link(href="/logout") Logout
+
+    // Header Content
 
     .container-fluid.ps-md-0.py-xxl-6
       .row.g-0
@@ -70,8 +73,8 @@ html(lang="en")
                           li= `${lot.location}: ${lot.available_today} available / ${lot.occupied_today} occupied`
 
                     .d-grid
-                      button.btn.btn-primary(type="submit") Reserve Now
-
+                      button.btn.btn-primary(type="submit") Reserve Now                 
+    // Footer
     footer.py-5.bg-nav
       .container.px-5 
         p.m-0.text-center.text-white &copy; 2025 ParkFlow. All Rights Reserved.

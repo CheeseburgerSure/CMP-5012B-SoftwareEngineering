@@ -26,7 +26,7 @@ const getReservePage = async (req, res) => {
       countMap[row.location] = parseInt(row.occupied_today);
     });
 
-    // data
+    // data 
     const enrichedLots = lots.map(lot => {
       const occupiedToday = countMap[lot.location] || 0;
       const availableToday = lot.parking_spaces - occupiedToday;
@@ -36,7 +36,7 @@ const getReservePage = async (req, res) => {
         available_today: availableToday
       };
     });
-
+    
     res.render('reserve', {
       lots: enrichedLots,
       todayDate: todayStr

@@ -6,12 +6,15 @@ html(lang="en")
     link(rel="stylesheet" href="/styles.css")
     link(rel="stylesheet" href="/bootstrap.css")
   body
+    // Navigation
     nav.navbar.navbar-expand-lg.navbar-dark.bg-nav 
       .container.px-5 
         a.navbar-brand(href="/") ParkFlow
         ul.navbar-nav.ms-auto
           li.nav-item: a.nav-link(href="/dashboard") Dashboard
           li.nav-item: a.nav-link(href="/logout") Logout
+
+    // Header Content
 
     .container.mt-5
       h2.text-center Booking Payment
@@ -26,7 +29,8 @@ html(lang="en")
             button.btn.btn-success(type="submit") Confirm Payment
         else
           p.text-danger You dont have enough balance to pay for this booking. Please top up your balance.
-
+  
+    // Footer
     footer.text-center.mt-5
       p &copy; 2025 ParkFlow. All Rights Reserved.
       
