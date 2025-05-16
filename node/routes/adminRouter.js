@@ -1,17 +1,43 @@
 const express = require('express');
 const router = express.Router();
+const {
+  renderAdminPanel,
+  renderAdminUsers,
+  renderEditUser,
+  postEditUser,
+  renderAdminBookings
+} = require('../controller/adminController');
+const pool = require('../db');
 
-// GET /admin Route
-router.get('/admin', (req, res) => {
-    res.render('admin');
-  });
+// Dashboard route
+const renderDashboard = async (req, res) => {
+  if (!req.session || !req.session.user) {
+    return res.redirect('/login');
+  }
+  try {
+    const result = await pool.query(
+      'SELECT is_admin, first_name, balance FROM "users" WHERE user_id = $1',
+      [req.session.user.id]
+    );
+    const user = result.rows[0];
+    const first_name = user && user.first_name;
+    const balance = user && user.balance ? user.balance : 0;
+    const sessions = 0;
+    const isAdmin = !!user.is_admin;
+    res.render('dashboard', { isAdmin, first_name, balance, sessions });
+  } catch (error) {
+    console.error('Error fetching admin status:', error);
+    res.status(500).send('Server error');
+  }
+};
 
-router.get('/admin/users', (req, res) => {
-    res.render('adminUsers');
-  });
+module.exports = { renderDashboard, renderAdminPanel };
 
-  router.get('/admin/bookings', (req, res) => {
-    res.render('adminBookings');
-  });
+// Admin routes (no admin middleware)
+router.get('/admin', renderAdminPanel);
+router.get('/admin/users', renderAdminUsers);
+router.get('/admin/users/:id/edit', renderEditUser);
+router.post('/admin/users/:id/edit', postEditUser);
+router.get('/admin/bookings', renderAdminBookings);
 
 module.exports = router;

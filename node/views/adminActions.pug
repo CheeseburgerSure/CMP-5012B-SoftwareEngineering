@@ -1,0 +1,45 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Edit User | ParkFlow
+    link(rel="stylesheet" href="/styles.css")
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css")
+
+  body
+    nav.navbar
+      .logo ParkFlow
+      .nav-items 
+        ul.nav-links
+          li: a(href="/dashboard") Dashboard
+          li: a(href="/logout") Logout
+      .menu-icon(onclick="toggleMenu()") &#9776;
+
+    .content
+      h1 Edit User
+
+      form(method="POST" action=`/admin/users/${user.id}/edit`)
+        .form-group
+          label(for="email") Email:
+          input#email(type="email", name="email", value=user.email, required)
+
+        .form-group
+          label(for="first_name") First Name:
+          input#first_name(type="text", name="first_name", value=user.first_name, required)
+
+        .form-group
+          label(for="last_name") Last Name:
+          input#last_name(type="text", name="last_name", value=user.last_name, required)
+
+        .form-group
+          label(for="status") Status:
+          select#status(name="status")
+            option(value="Active" selected=user.status=='Active') Active
+            option(value="Banned" selected=user.status=='Banned') Banned
+
+        button(type="submit") Save Changes
+        a.button(href="/admin/users") Cancel
+
+    footer
+      p &copy; 2025 ParkFlow. All Rights Reserved.
