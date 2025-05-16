@@ -10851,3 +10851,12 @@ textarea.form-control-lg {
   width: 4rem;
   font-size: 2rem;
 }
+
+.headShotfeature {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 6rem;
+  width: 6rem;
+  font-size: 2rem;
+}
