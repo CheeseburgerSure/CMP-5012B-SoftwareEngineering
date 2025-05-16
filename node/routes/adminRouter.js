@@ -5,7 +5,9 @@ const {
   renderAdminUsers,
   renderEditUser,
   postEditUser,
-  renderAdminBookings
+  renderAdminBookings,
+  renderEditBooking,
+  postEditBooking
 } = require('../controller/adminController');
 const pool = require('../db');
 
@@ -39,5 +41,7 @@ router.get('/admin/users', renderAdminUsers);
 router.get('/admin/users/:id/edit', renderEditUser);
 router.post('/admin/users/:id/edit', postEditUser);
 router.get('/admin/bookings', renderAdminBookings);
+router.get('/admin/bookings/:id/edit', renderEditBooking);
+router.post('/admin/bookings/:id/edit', postEditBooking);
 
 module.exports = router;

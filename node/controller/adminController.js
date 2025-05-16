@@ -56,15 +56,21 @@ const renderAdminBookings = async (req, res) => {
   }
   try {
     const result = await pool.query(
-      `SELECT b.booking_id, b.user_id, u.first_name, u.last_name
-       FROM "bookings" b
-       LEFT JOIN "users" u ON b.user_id = u.user_id
-       ORDER BY b.booking_id DESC`
+      `SELECT b.booking_id, b.user_id, u.first_name, u.last_name,
+        b.location, b.time_booked_for, b.booking_date, b.price, b.booking_paid
+        FROM "bookings" b
+        LEFT JOIN "users" u ON b.user_id = u.user_id
+        ORDER BY b.booking_id DESC`
     );
     const bookings = result.rows.map(b => ({
       id: b.booking_id,
       user_id: b.user_id,
-      user_name: `${b.first_name || ''} ${b.last_name || ''}`.trim()
+      user_name: `${b.first_name || ''} ${b.last_name || ''}`.trim(),
+      location: b.location,
+      time_booked_for: b.time_booked_for,
+      booking_date: b.booking_date,
+      price: b.price,
+      booking_paid: b.booking_paid
     }));
     res.render('adminBookings', { bookings });
   } catch (error) {
@@ -130,6 +136,71 @@ const postEditUser = async (req, res) => {
   }
 };
 
+// booking editor
+const renderEditBooking = async (req, res) => {
+  if (!(await isUserAdmin(req))) {
+    return res.redirect('/login');
+  }
+  const bookingId = req.params.id;
+  try {
+    const result = await pool.query(
+      `SELECT b.booking_id, b.user_id, u.first_name, u.last_name,
+       b.location, b.time_booked_for, b.booking_date, b.price, b.booking_paid
+       FROM "bookings" b
+       LEFT JOIN "users" u ON b.user_id = u.user_id
+       WHERE b.booking_id = $1`, [bookingId]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).send('Booking not found');
+    }
+    const booking = result.rows[0];
+    res.render('bookingActions', { 
+      booking: {
+        id: booking.booking_id,
+        user_id: booking.user_id,
+        user_name: `${booking.first_name || ''} ${booking.last_name || ''}`.trim(),
+        location: booking.location,
+        time_booked_for: booking.time_booked_for,
+        booking_date: booking.booking_date,
+        price: booking.price,
+        booking_paid: booking.booking_paid
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching booking for edit:', error);
+    res.status(500).send('Server error');
+  }
+};
+
+// post booking handler
+const postEditBooking = async (req, res) => {
+  if (!(await isUserAdmin(req))) {
+    return res.redirect('/login');
+  }
+  const bookingId = req.params.id;
+  const { user_id, location, booking_date, time_booked_for, price, booking_paid } = req.body;
+  try {
+    await pool.query(
+      `UPDATE "bookings"
+       SET user_id = $1, location = $2, booking_date = $3, time_booked_for = $4, price = $5, booking_paid = $6
+       WHERE booking_id = $7`,
+      [
+        user_id,
+        location,
+        booking_date,
+        time_booked_for,
+        price,
+        booking_paid === 'true',
+        bookingId
+      ]
+    );
+    res.redirect('/admin/bookings');
+  } catch (error) {
+    console.error('Error updating booking:', error);
+    res.status(500).send('Server error');
+  }
+};
+
 // check if the current session user is an admin
 async function isUserAdmin(req) {
   if (!req.session || !req.session.user) return false;
@@ -151,6 +222,8 @@ module.exports = {
   renderEditUser,
   postEditUser,
   renderAdminBookings,
-  isUserAdmin
+  isUserAdmin,
+  renderEditBooking,
+  postEditBooking
 };
 

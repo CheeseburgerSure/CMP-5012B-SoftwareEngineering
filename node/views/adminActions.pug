@@ -45,5 +45,24 @@ html(lang="en")
         button(type="submit") Save Changes
         a.button(href="/admin/users") Cancel
 
+    .content
+      h1 Admin - Bookings
+
+      .table-container
+        table.user-table
+          thead
+            tr
+              th Booking ID
+              th User ID
+              th User Name
+              th Actions
+          tbody
+            each booking in bookings
+              tr
+                td= booking.id
+                td= booking.user_id
+                td= booking.user_name
+                td: a(href=`/admin/bookings/${booking.id}/edit`) Edit
+
     footer
       p &copy; 2025 ParkFlow. All Rights Reserved.

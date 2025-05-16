@@ -28,12 +28,24 @@ html(lang="en")
               th Booking ID
               th User ID
               th User Name
+              th Location
+              th Date
+              th Time
+              th Price
+              th Paid
+              th Actions
           tbody
             each booking in bookings
               tr
                 td= booking.id
                 td= booking.user_id
                 td= booking.user_name
+                td= booking.location
+                td= booking.booking_date
+                td= booking.time_booked_for
+                td= booking.price
+                td= booking.booking_paid ? 'Yes' : 'No'
+                td: a(href=`/admin/bookings/${booking.id}/edit`) Edit
 
     // Footer
     footer
