@@ -107,7 +107,7 @@ const renderEditUser = async (req, res) => {
     }
     const user = result.rows[0];
 
-    // Fetch bookings for this user if needed, or just pass an empty array
+    // fetches bookings
     let bookings = [];
     try {
       const bookingsResult = await pool.query(
