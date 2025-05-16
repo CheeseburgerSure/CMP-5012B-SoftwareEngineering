@@ -9,9 +9,13 @@ router.get('/login', (req, res) => {
   });
 
 // Handle sign-up form POST
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res, next) => {
   console.log('Received a POST request to /login');
-  loginController.postLogin(req, res);
+  try {
+    await loginController.postLogin(req, res);
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = router;
