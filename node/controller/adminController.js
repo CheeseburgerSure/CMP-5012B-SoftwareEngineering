@@ -106,6 +106,19 @@ const renderEditUser = async (req, res) => {
       return res.status(404).send('User not found');
     }
     const user = result.rows[0];
+
+    // Fetch bookings for this user if needed, or just pass an empty array
+    let bookings = [];
+    try {
+      const bookingsResult = await pool.query(
+        'SELECT * FROM "bookings" WHERE user_id = $1',
+        [userId]
+      );
+      bookings = bookingsResult.rows || [];
+    } catch (err) {
+      bookings = [];
+    }
+
     res.render('adminActions', {
       user: {
         id: user.user_id,
@@ -114,7 +127,8 @@ const renderEditUser = async (req, res) => {
         last_name: user.last_name,
         balance: user.balance,
         status: user.is_banned ? 'Banned' : 'Active'
-      }
+      },
+      bookings
     });
   } catch (error) {
     console.error('Error fetching user for edit:', error);
