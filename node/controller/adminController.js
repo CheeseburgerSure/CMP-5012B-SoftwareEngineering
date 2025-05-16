@@ -1,6 +1,6 @@
 const pool = require('../db');
 
-// Function for total user count
+//user count function
 async function getTotalUserCount() {
   try {
     const result = await pool.query('SELECT COUNT(*) AS count FROM "users"');
@@ -11,7 +11,7 @@ async function getTotalUserCount() {
   }
 }
 
-// Function for total booking count
+//booking count function
 async function getTotalBookingCount() {
   try {
     const result = await pool.query('SELECT COUNT(*) AS count FROM "bookings"');

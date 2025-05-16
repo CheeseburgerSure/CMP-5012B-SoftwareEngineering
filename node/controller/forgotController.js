@@ -18,7 +18,7 @@ const postForgot = async (req, res) => {
     const userId = user.user_id;
     const firstName = user.first_name;
 
-    // 2. Rate limiting: Check reset attempts
+    // Check reset attempts
     const now = new Date();
     const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
@@ -39,7 +39,7 @@ const postForgot = async (req, res) => {
       });
     }
 
-    // Cooldown: 5-minute wait
+    // cooldown for password reset
     const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
     const recentAttempts = await pool.query(
       'SELECT * FROM "password_reset_attempts" WHERE user_id = $1 AND timestamp > $2',
@@ -52,11 +52,11 @@ const postForgot = async (req, res) => {
       });
     }
 
-    // 4. Generate secure token & expiry
+    // Generate secure token & expiry
     const token = crypto.randomBytes(32).toString('hex');
-    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour expiry
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // an hour
 
-    // Append token to DB
+    // Append token to Database
     await pool.query(
       'INSERT INTO "password_reset_tokens" (user_id, token, expires_at) VALUES ($1, $2, $3)',
       [userId, token, expiresAt]
