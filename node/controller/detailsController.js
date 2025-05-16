@@ -2,7 +2,7 @@ const pool = require('../db');
 const bcrypt = require('bcrypt');
 const { validatePassword } = require('../utils/validators.js');
 
-// GET /details – render user details page
+// Render user details page
 const getDetailsPage = async (req, res) => {
   try {
     if (!req.session.user?.email) return res.redirect('/login');
@@ -28,7 +28,7 @@ const getDetailsPage = async (req, res) => {
       error: req.session.error
     });
 
-    // Clear messages after rendering
+    //Clear messages after rendering
     delete req.session.successMessage;
     delete req.session.error;
 
@@ -41,7 +41,7 @@ const getDetailsPage = async (req, res) => {
   }
 };
 
-// POST /details/change-details – handle updates
+// user details update handler
 const updateUserDetails = async (req, res) => {
   try {
     const sessionEmail = req.session.user?.email;

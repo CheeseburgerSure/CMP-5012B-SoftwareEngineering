@@ -1,12 +1,12 @@
 const bcrypt = require('bcrypt');
 const pool = require('../db');
 
-// Handle login form submission
+// Handle login form submissions
 const postLogin = async (req, res) => {
     const { email, password } = req.body;
     console.log('✅LOGIN ROUTER UTILISED✅');
 
-    // Basic server-side validation
+    // Server side validation
   if (!email || !password) {
     return res.render('login', { error: 'Both email and password are required.' });
   }
@@ -21,7 +21,7 @@ const postLogin = async (req, res) => {
 
     const user = result.rows[0];
 
-    console.log('User retrieved from database:', user); // Log the full user object to see if Password_Hash exists
+    console.log('User retrieved from database:', user); // Log the full user object to see if password hash exists
     console.log('Password received:', password); // Log the password input from the form
     console.log('Password Hash from database:', user.password_hash); // Log the password hash stored in the database
 
@@ -47,7 +47,7 @@ const postLogin = async (req, res) => {
       is_admin: user.is_admin
     };
 
-    res.redirect('/dashboard');
+    return res.redirect('/dashboard');
   } catch (err) {
     console.error("Error during login process:",err);
     res.status(500).send('Server error');

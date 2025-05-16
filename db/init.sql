@@ -1,7 +1,7 @@
--- Create Extensions
+--Extension to generate unique IDs
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- Users Table
+--Users Table
 CREATE TABLE IF NOT EXISTS "users" (
     user_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     email VARCHAR(100) UNIQUE NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS "users" (
     balance DECIMAL(10, 2) DEFAULT 0.00
 );
 
--- Booking Table
+--Booking Table
 CREATE TABLE IF NOT EXISTS "bookings" (
     booking_id SERIAL PRIMARY KEY,
     user_id UUID,
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS "bookings" (
     FOREIGN KEY (user_id) REFERENCES "users" (user_id)
 );
 
--- Parking Location Table
+--Parking Location Table
 CREATE TABLE IF NOT EXISTS "parking_lots" (
     location_id SERIAL PRIMARY KEY,
     location VARCHAR(100),
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS "parking_lots" (
     rate DECIMAL(10, 2)
 );
 
--- Transactions Table
+--Transactions Table
 CREATE TABLE IF NOT EXISTS "transactions" (
     transaction_id SERIAL PRIMARY KEY,
     user_id UUID,
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS "transactions" (
     FOREIGN KEY (user_id) REFERENCES "users" (user_id)
 );
 
--- Email Verification Tokens Table
+--Email Verification Tokens Table
 CREATE TABLE IF NOT EXISTS "email_verification_tokens" (
     verification_token_id SERIAL PRIMARY KEY,
     user_id UUID NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS "email_verification_tokens" (
     FOREIGN KEY (user_id) REFERENCES "users" (user_id) ON DELETE CASCADE
 );
 
--- Password Reset Tokens Table
+--Password Reset Tokens Table
 CREATE TABLE IF NOT EXISTS "password_reset_tokens" (
     reset_token_id SERIAL PRIMARY KEY,
     user_id UUID NOT NULL,
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS "password_reset_tokens" (
     FOREIGN KEY (user_id) REFERENCES "users" (user_id) ON DELETE CASCADE
 );
 
--- Password Reset Attempts Table
+--Password Reset Attempts Table
 CREATE TABLE IF NOT EXISTS "password_reset_attempts" (
     id SERIAL PRIMARY KEY,
     user_id UUID NOT NULL, 
@@ -101,6 +101,7 @@ INSERT INTO "users" (
     balance
 )
 VALUES
+--Admin account
 (
     uuid_generate_v4(),  
     'parkflow113@gmail.com', 
@@ -125,7 +126,7 @@ VALUES
     'Zambrano',              
     '+44',                   
     '9876543210',           
-    '$2b$12$cE26VdAa8d/LL2MY6oxgsOhTKyrkbeudYaJ4oQwAi0RhlUPy8G71K',  
+    '$2b$10$dRNKn8CeEAc17kCsyEH94uj0gjRO.QoG6XOj7OOKJBvytofnkpZPm',  
     '123456',  
     TRUE,               
     NOW() + INTERVAL '1 hour',  
@@ -134,9 +135,26 @@ VALUES
     FALSE,                  
     'XYZ123456',            
     50.00                   
+),
+(
+    uuid_generate_v4(),
+    'test@example.com',  
+    'Test User',                 
+    '1',              
+    '+44',                   
+    '9876543210',           
+    '$2b$10$0.pLc30mYAzNXYjAlAmNPubK6Gh8EnrgK1d17wxjmTrAUSdRo9Ttq',  
+    '123456',  
+    TRUE,               
+    NOW() + INTERVAL '1 hour',  
+    NOW(),                   
+    FALSE,                  
+    FALSE,                  
+    'XYZ123456',            
+    0.00      
 );
 
--- Insert parking lot data
+--Insert parking lot data
 INSERT INTO "parking_lots" (location_id, location, parking_spaces, occupied_spaces, rate)
 VALUES
 (1, 'UEA Main Car Park', 100, 0, 5.00),
