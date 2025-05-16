@@ -5,7 +5,7 @@ const dashboardController = require('../controller/dashboardController');
 // Route for rendering the dashboard
 router.get('/', (req, res) => {
   if (!req.session.user) {
-    return res.redirect('/login'); // Redirect to login if the user is not logged in
+    return res.redirect('/login'); // Redirect to login if not logged in
   }
   // If user is logged in, render dashboard
   dashboardController.getDashboardData(req, res);

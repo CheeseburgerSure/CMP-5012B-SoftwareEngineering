@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const loginController = require('../controller/loginController'); // Import the controller
+const loginController = require('../controller/loginController'); 
 
-// GET /login Route (Display login form)
+// Route for rendering the login page
 router.get('/login', (req, res) => {
     const successMessage = req.query.success ? 'You have successfully logged out!' : null;
     res.render('login', { successMessage });

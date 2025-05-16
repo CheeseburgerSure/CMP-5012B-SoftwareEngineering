@@ -1,5 +1,5 @@
 
-// Helper: Validate password strength
+// Validate password strength
 function validatePassword(password) {
   const errors = [];
 

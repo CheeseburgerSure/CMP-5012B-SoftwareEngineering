@@ -2,7 +2,7 @@ const pool = require('../db');
 const bcrypt = require('bcrypt');
 const { validatePassword } = require('../utils/validators');
 
-// GET: Render reset password page
+// Reset password page
 const getResetPage = async (req, res) => {
   const token = req.query.token;
 
@@ -14,7 +14,7 @@ const getResetPage = async (req, res) => {
   }
 
   try {
-    // Check password_reset_tokens table
+    // Check password reset tokens table
     const { rows } = await pool.query(
       'SELECT * FROM "password_reset_tokens" WHERE token = $1 AND expires_at > $2',
       [token, new Date()]
@@ -37,7 +37,7 @@ const getResetPage = async (req, res) => {
   }
 };
 
-// POST: Handle password reset
+// Password reset handler
 const postResetPassword = async (req, res) => {
   const { token, newPassword, confirmPassword } = req.body;
 
