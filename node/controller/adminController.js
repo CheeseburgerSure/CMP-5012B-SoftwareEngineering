@@ -242,6 +242,77 @@ async function isUserAdmin(req) {
   }
 }
 
+// search users handler
+const searchAdminUsers = async (req, res) => {
+  if (!(await isUserAdmin(req))) {
+    return res.redirect('/login');
+  }
+  const q = req.query.q ? req.query.q.trim() : '';
+  if (!q) {
+    return res.redirect('/admin/users');
+  }
+  try {
+    const result = await pool.query(
+      `SELECT user_id, first_name, last_name, email, is_admin, is_banned, balance
+       FROM "users"
+       WHERE email ILIKE $1 OR CAST(user_id AS TEXT) ILIKE $1
+       ORDER BY user_id DESC`,
+      [`%${q}%`]
+    );
+    const users = result.rows.map(user => ({
+      id: user.user_id,
+      name: `${user.first_name || ''} ${user.last_name || ''}`.trim(),
+      email: user.email,
+      role: user.is_admin ? 'Admin' : 'User',
+      status: user.is_banned ? 'Banned' : 'Active',
+      balance: user.balance
+    }));
+    res.render('adminUsers', { users });
+  } catch (error) {
+    console.error('Error searching users:', error);
+    res.status(500).send('Server error');
+  }
+};
+
+// search bookings handler
+const searchAdminBookings = async (req, res) => {
+  if (!(await isUserAdmin(req))) {
+    return res.redirect('/login');
+  }
+  const q = req.query.q ? req.query.q.trim() : '';
+  if (!q) {
+    return res.redirect('/admin/bookings');
+  }
+  try {
+    const result = await pool.query(
+      `SELECT b.booking_id, b.user_id, u.first_name, u.last_name,
+        b.location, b.time_booked_for, b.booking_date, b.price, b.booking_paid
+       FROM "bookings" b
+       LEFT JOIN "users" u ON b.user_id = u.user_id
+       WHERE 
+         CAST(b.booking_id AS TEXT) ILIKE $1 OR
+         CONCAT(u.first_name, ' ', u.last_name) ILIKE $1 OR
+         b.location ILIKE $1
+       ORDER BY b.booking_id DESC`,
+      [`%${q}%`]
+    );
+    const bookings = result.rows.map(b => ({
+      id: b.booking_id,
+      user_id: b.user_id,
+      user_name: `${b.first_name || ''} ${b.last_name || ''}`.trim(),
+      location: b.location,
+      time_booked_for: b.time_booked_for,
+      booking_date: b.booking_date,
+      price: b.price,
+      booking_paid: b.booking_paid
+    }));
+    res.render('adminBookings', { bookings });
+  } catch (error) {
+    console.error('Error searching bookings:', error);
+    res.status(500).send('Server error');
+  }
+};
+
 module.exports = {
   renderAdminPanel,
   renderAdminUsers,
@@ -250,6 +321,8 @@ module.exports = {
   renderAdminBookings,
   isUserAdmin,
   renderEditBooking,
-  postEditBooking
+  postEditBooking,
+  searchAdminUsers,
+  searchAdminBookings
 };
 
