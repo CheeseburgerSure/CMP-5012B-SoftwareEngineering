@@ -24,35 +24,51 @@ html(lang="en")
             li.nav-item: a.nav-link(href="/logout") Logout
 
     // Page Content
-    .content
-      h1 Admin - Users
+    .container.mt-5
+      h1.mb-4.text-center Admin - Users
 
-      .table-container
-        table.user-table
-          thead
+      // Search Bar
+      form(method="GET" action="/admin/users/search" class="row mb-4 justify-content-center")
+        .col-md-6
+          input.form-control(type="text", name="q", placeholder="Search by Email or User ID")
+        .col-md-2
+          button.btn.btn-primary.w-100(type="submit") Search
+
+      // User Table
+      .table-responsive
+        table.table.table-striped.table-hover
+          thead.table-dark
             tr
-              th ID
+              th User ID
               th Name
               th Email
               th Role
               th Status
-              th Balance
+              th Balance (£)
               th Actions
           tbody
-            each user in users
+            if users.length
+              each user in users
+                tr
+                  td= user.id
+                  td= user.name
+                  td= user.email
+                  td.text-capitalize= user.role
+                  td= user.status
+                  td= user.balance
+                  td
+                    a.btn.btn-sm.btn-outline-primary(href=`/admin/users/${user.id}/edit`)
+                      i.fas.fa-edit
+                      |  Edit
+            else
               tr
-                td= user.id
-                td= user.name
-                td= user.email
-                td= user.role
-                td= user.status
-                td= user.balance
-                td: a(href=`/admin/users/${user.id}/edit`) Edit
+                td(colspan="7").
+                 No users found.
+
 
     // Footer
     footer.py-5.bg-nav
-      .container.pix-5 
+      .container.px-5 
         p.m-0.text-center.text-white Copyright &copy; 2025 ParkFlow. All Rights Reserved.
 
-//Burger dropdown support and other bootstrap basics
-script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js")

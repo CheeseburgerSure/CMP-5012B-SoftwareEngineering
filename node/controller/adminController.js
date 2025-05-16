@@ -11,6 +11,17 @@ async function getTotalUserCount() {
   }
 }
 
+// Function for total booking count
+async function getTotalBookingCount() {
+  try {
+    const result = await pool.query('SELECT COUNT(*) AS count FROM "bookings"');
+    return parseInt(result.rows[0].count, 10);
+  } catch (error) {
+    console.error('Error fetching user count:', error);
+    return 0;
+  }
+}
+
 // renders the admin panel with user count
 const renderAdminPanel = async (req, res) => {
   if (!(await isUserAdmin(req))) {
@@ -18,7 +29,8 @@ const renderAdminPanel = async (req, res) => {
   }
   try {
     const userCount = await getTotalUserCount();
-    res.render('admin', { userCount });
+    const bookingCount = await getTotalBookingCount();
+    res.render('admin', { userCount, bookingCount});
   } catch (error) {
     console.error('Error rendering admin panel:', error);
     res.status(500).send('Server error');
@@ -40,7 +52,7 @@ const renderAdminUsers = async (req, res) => {
       email: user.email,
       role: user.is_admin ? 'Admin' : 'User',
       status: user.is_banned ? 'Banned' : 'Active',
-      balance: user.balance //
+      balance: user.balance
     }));
     res.render('adminUsers', { users });
   } catch (error) {
