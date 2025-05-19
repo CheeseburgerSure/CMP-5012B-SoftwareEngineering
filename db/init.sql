@@ -140,7 +140,7 @@ VALUES
     uuid_generate_v4(),
     'test@example.com',  
     'Test User',                 
-    '1',              
+    'Invalid Email/ Password',              
     '+44',                   
     '9876543210',           
     '$2b$10$0.pLc30mYAzNXYjAlAmNPubK6Gh8EnrgK1d17wxjmTrAUSdRo9Ttq',  
@@ -150,6 +150,23 @@ VALUES
     NOW(),                   
     FALSE,                  
     FALSE,                  
+    'XYZ123456',            
+    0.00      
+),
+(
+    uuid_generate_v4(),
+    'test2@example.com',  
+    'Test User 2',                 
+    'Banned User ',              
+    '+44',                   
+    '9876543210',           
+    '$2b$10$0.pLc30mYAzNXYjAlAmNPubK6Gh8EnrgK1d17wxjmTrAUSdRo9Ttq',  
+    '123456',  
+    TRUE,               
+    NOW() + INTERVAL '1 hour',  
+    NOW(),                   
+    FALSE,                  
+    TRUE,                  
     'XYZ123456',            
     0.00      
 );

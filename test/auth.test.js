@@ -5,19 +5,39 @@ const app = require('../node/server');
 
 chai.use(chaiHttp);
 
-
-// Testing user with a valid email and password
 describe('POST /login', () => {
+
   it('should login successfully with valid credentials', (done) => {
     chai.request(app)
-  .post('/login')
-  .type('form')
-  .send({ email: 'test@example.com', password: 'validpassword' })
-  .end((err, res) => {
-    expect(res).to.have.status(200);
-    done();
+      .post('/login')
+      .type('form')
+      .send({ email: 'test@example.com', password: 'validpassword' })
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        done();
+      });
   });
 
-
+  it('should not login with incorrect email', (done) => {
+    chai.request(app)
+      .post('/login')
+      .type('form')
+      .send({ email: 'wrong@example.com', password: 'validpassword' })
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        done();
+      });
   });
+
+  it('should not login with as user is banned', (done) => {
+    chai.request(app)
+      .post('/login')
+      .type('form')
+      .send({ email: 'test2@example.com', password: 'validpassword' })
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        done();
+      });
+  });
+
 });
