@@ -26,7 +26,7 @@ const getReservePage = async (req, res) => {
       countMap[row.location] = parseInt(row.occupied_today);
     });
 
-    // data 
+    // Occupied and available spaces today
     const enrichedLots = lots.map(lot => {
       const occupiedToday = countMap[lot.location] || 0;
       const availableToday = lot.parking_spaces - occupiedToday;
@@ -37,6 +37,7 @@ const getReservePage = async (req, res) => {
       };
     });
     
+    // Sends information to the reserve.pug page
     res.render('reserve', {
       lots: enrichedLots,
       todayDate: todayStr
@@ -52,9 +53,9 @@ const postReserve = async (req, res) => {
     const { location_id, date, time, plate, duration } = req.body;
     
     const hours = parseInt(duration); 
-    const email = req.session.user?.email;
+    const email = req.session.user?.email; // Makes sures the user is logged in
 
-    if (!email) return res.redirect('/login');
+    if (!email) return res.redirect('/login'); // if not logged in, redirect to login page
 
     // This only allows same-day bookings
     const inputDate = new Date(date);
@@ -79,7 +80,7 @@ const postReserve = async (req, res) => {
     if (lot.occupied_spaces >= lot.parking_spaces) {
       return res.status(400).send('No parking space available at this location.');
     }
-
+    // saves booking information to the database
     const bookingInsert = await pool.query(
       `INSERT INTO bookings (user_id, location, time_booked_for, duration, booking_date, price)
        VALUES ($1, $2, $3, $4, $5, $6) RETURNING booking_id`,
@@ -92,7 +93,7 @@ const postReserve = async (req, res) => {
       'UPDATE parking_lots SET occupied_spaces = occupied_spaces + 1 WHERE location_id = $1',
       [location_id]
     );
-
+    // Redirect to payment page
     res.redirect(`/payment/${booking_id}`);
   } catch (err) {
     console.error('Reservation error:', err);
